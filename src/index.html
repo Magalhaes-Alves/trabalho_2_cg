@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho 2 - CG</title>
+</head>
+<body onload="init()">
+
+    <canvas id="cg" height="1000" width="1000"></canvas>
+    
+</body>
+
+<script id="vertex-shader" type="notjs">
+    attribute vec4 position;
+    attribute vec4 fcolor;
+
+    varying vec4 color;
+
+    void main(){
+        color = fcolor;
+        gl_Position = position;
+    }
+
+</script>
+
+<script id="frag-shader" type="notjs">
+    precision mediump float;
+    varying vec4 color;
+    
+    void main(){
+        gl_FragColor = color;
+    }
+
+</script>
+<script src="webgl.js"></script>
+</html>
