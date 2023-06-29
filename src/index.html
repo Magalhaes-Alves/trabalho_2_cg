@@ -13,12 +13,15 @@
 
 <script id="vertex-shader" type="notjs">
     attribute vec4 position;
+    attribute vec2 ftextCoord;
     attribute vec4 fcolor;
 
     varying vec4 color;
+    varying vec2 v_textCoord;
 
     void main(){
-        color = fcolor;
+        color = fcolor
+        v_textCoord = ftextCoord;
         gl_Position = position;
     }
 
@@ -26,10 +29,15 @@
 
 <script id="frag-shader" type="notjs">
     precision mediump float;
+    
     varying vec4 color;
+    varying vec2 v_textCoord;
+
+    uniform sampler2D tex;
     
     void main(){
-        gl_FragColor = color;
+        gl_FragColor = texture2D(text,v_textCoord);
+
     }
 
 </script>
