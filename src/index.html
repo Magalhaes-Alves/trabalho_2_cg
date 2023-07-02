@@ -7,7 +7,7 @@
 </head>
 <body onload="init()">
 
-    <canvas id="cg" height="1000" width="1000"></canvas>
+    <canvas id="cg" height="730" width="1320"></canvas>
     
 </body>
 
@@ -20,7 +20,7 @@
     varying vec2 v_textCoord;
 
     void main(){
-        color = fcolor
+        color = fcolor;
         v_textCoord = ftextCoord;
         gl_Position = position;
     }
@@ -33,7 +33,7 @@
     varying vec4 color;
     varying vec2 v_textCoord;
 
-    uniform sampler2D tex;
+    uniform sampler2D text;
     
     void main(){
         gl_FragColor = texture2D(text,v_textCoord);

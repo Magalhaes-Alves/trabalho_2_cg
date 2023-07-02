@@ -1,3 +1,7 @@
+//Array de texturas
+var teximg =[]
+var texSrc =["img/majoras.png","img/ocarina.jpg"]
+var loadTex =0
 function getGL(canvas)
 {
     // Pega o contexto webgl do canvas
@@ -40,10 +44,34 @@ function createProgram(gl, vtxShader, fragShader)
 	gl.deleteProgram(prog);	
 }
 
-function init()
+function init(){
+    //Garante que as texturas serão carregadas totalmente antes de iniciar o programa
+    teximg[0] = new Image()
+    teximg[0].src = texSrc[0]
+    teximg[0].onload= ()=>{
+        
+        loadTex++
+        loadTextures()
+    }
+    
+
+    teximg[1]= new Image()
+    teximg[1].src = texSrc[1]
+    teximg[1].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+        
+function loadTextures(){
+    if (loadTex == teximg.length){
+        draw()
+    }
+}
+
+}
+
+function draw()
 {
-    var teximg = new Image();
-    teximg.src = "img/gato.jpg"
 
     var canvas = document.getElementById("cg");
 
@@ -60,12 +88,6 @@ function init()
         
         //Avisa ao webgl que deve usar o seguinte programa
         gl.useProgram(prog);
-
-        //Inicializa Ã¡rea de desenho: viewport e cor de limpeza; limpa a tela
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(0, 0, 0, 1);
-        gl.enable( gl.BLEND );
-        gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
 
     }
     //Define coordenadas dos triÃ¢ngulos
@@ -116,10 +138,50 @@ function init()
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
                             2*4       //salto inicial (em bytes)
                             );
+    
+    //Carregar textura na gpu
+    var text0 = gl.createTexture()
+    //Diz qual o slot de textura será trabalhada no momento
+    gl.activeTexture(gl.TEXTURE0)
+    //Atribui ao slot ativo a textura criada em text0
+    gl.bindTexture(gl.TEXTURE_2D,text0)
+    //Configura o mapeamento de textura
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
+    //
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[0])
+    
+    //Carregando segunda textura
+    var tex1 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE1)
+    gl.bindTexture(gl.TEXTURE_2D,tex1)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
+    
+    //Inicializa Ã¡rea de desenho: viewport e cor de limpeza; limpa a tela
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clearColor(0, 0, 0, 1);
+    gl.enable( gl.BLEND );
+    gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+    
     
     gl.clear( gl.COLOR_BUFFER_BIT);
     
+    //Cria um ponteiro para a variável que indica qual o slot onde a textura está
+    var texPtr =gl.getUniformLocation(prog,"text")
+    //Muda o valor dessa variável
+    gl.uniform1i(texPtr,0)
+
     gl.drawArrays(gl.TRIANGLES, 0,3);
+
+    gl.uniform1i(texPtr,1)
     gl.drawArrays(gl.TRIANGLES,2,3);
 }
