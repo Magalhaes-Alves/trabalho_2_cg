@@ -5,7 +5,7 @@ var loadTex =0
 var gl
 var prog
 var angle=0
-var df =5
+
 
 function getGL(canvas)
 {
@@ -193,18 +193,43 @@ function configScene(){
 
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
 
-    //Configura a distância focal
-    dfPtr = gl.getUniformLocation(prog,"df")
-    gl.uniform1f(dfPtr,df)
+}   
 
 
-}    
+function createPerspective(fovy,aspect,near,far){
+
+    fovy = fovy*Math.PI/180.0
+
+    var fy = 1/math.tan(fovy/2.0)
+    var fx = fy/aspect
+
+    var B = -2*far*near/(far*near)
+    var A = -(far+near)/(far-near)
+
+    var proj = math.matrix([
+        [fx,0,0,0],
+        [0,fy,0,0],
+        [0,0,A,B],
+        [0,0,-1,0]
+    ])
+    return proj
+}
     
 function draw(){
+
+    //Criar matriz de projeção
+
+    mproj = createPerspective(20,gl.canvas.width/gl.canvas.height,1,50 )
 
     //Ponteiro para a matriz de transformação
     var transfPtr = gl.getUniformLocation(prog,"trans_mat")
     
+    var tz =math.matrix([
+        [1,0,0,0],
+        [0,1,0,0],
+        [0,0,1,-5],
+        [0,0,0,1]
+    ])
 
     var mat_rot_X =math.matrix([
         [1, 0, 0, 0],
@@ -230,8 +255,10 @@ function draw(){
 
     var transf = math.multiply(mat_rot_Y,mat_rot_X)
     transf = math.multiply(mat_rot_Z,transf)
+    transf = math.multiply(tz,transf)
+    transf = math.multiply(mproj,transf)
 
-    transf = math.flatten(transf)._data
+    transf = math.flatten(math.transpose(transf))._data
 
     gl.uniformMatrix4fv(transfPtr,false,transf)
 

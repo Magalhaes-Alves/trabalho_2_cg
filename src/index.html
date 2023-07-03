@@ -26,9 +26,6 @@
     //Matrizes de transformação
     uniform mat4 trans_mat;
 
-    //Variável de perspectiva
-    uniform float df;
-
     //Variavel para inserir cor no frag shader
     varying vec4 color;
     //Variavel para inserir as coordenadas de textura no frag shader
@@ -39,8 +36,6 @@
         color = fcolor;
         v_textCoord = ftextCoord;
         gl_Position = trans_mat*position;
-
-        gl_Position[3] = 1.0+gl_Position[2]/df;
     }
 
 </script>
