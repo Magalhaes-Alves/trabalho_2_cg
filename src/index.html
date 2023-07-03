@@ -10,29 +10,49 @@
     <canvas id="cg" height="730" width="1320"></canvas>
     
 </body>
-
+<!-- 
+    attribute - Cada elemento poderá ter um atributo diferente
+    varying - A cada momento a 
+    Uniform  - todos os elementos terão o mesmo valor para essa variável
+ -->
 <script id="vertex-shader" type="notjs">
+    // position -> vetor de coordenadas do vertice -> [x, y, z, 1]
     attribute vec4 position;
+    //ftextCoord -> vetor com as coordenadas de textura do vértice -> [tx,ty]
     attribute vec2 ftextCoord;
+    // fcolor -> vetor com os valores RGBA de um vértice -> [R, G, B, A]
     attribute vec4 fcolor;
 
+    //Matrizes de transformação
+    uniform mat4 trans_mat;
+
+    //Variável de perspectiva
+    uniform float df;
+
+    //Variavel para inserir cor no frag shader
     varying vec4 color;
+    //Variavel para inserir as coordenadas de textura no frag shader
     varying vec2 v_textCoord;
 
     void main(){
+        //Atribuição do valores
         color = fcolor;
         v_textCoord = ftextCoord;
-        gl_Position = position;
+        gl_Position = trans_mat*position;
+
+        gl_Position[3] = 1.0+gl_Position[2]/df;
     }
 
 </script>
 
 <script id="frag-shader" type="notjs">
     precision mediump float;
-    
+    //color -> vetor de cores definido no vertex-shader
     varying vec4 color;
+    //v_textCoord -> vetor de coordenadas de textura definido no vertex-shader
     varying vec2 v_textCoord;
 
+    //Número do slot onde está a textura
     uniform sampler2D text;
     
     void main(){
@@ -42,4 +62,5 @@
 
 </script>
 <script src="webgl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.js"></script>
 </html>

@@ -2,6 +2,11 @@
 var teximg =[]
 var texSrc =["img/majoras.png","img/ocarina.jpg"]
 var loadTex =0
+var gl
+var prog
+var angle=0
+var df =5
+
 function getGL(canvas)
 {
     // Pega o contexto webgl do canvas
@@ -64,18 +69,20 @@ function init(){
         
 function loadTextures(){
     if (loadTex == teximg.length){
+        initGl()
+        configScene()
         draw()
     }
 }
 
 }
 
-function draw()
+function initGl()
 {
 
     var canvas = document.getElementById("cg");
 
-    var gl = getGL(canvas);
+    gl = getGL(canvas);
     if(gl)
     {
         //Inicializa shaders
@@ -84,28 +91,48 @@ function draw()
 
         var vtxShader = createShader(gl, gl.VERTEX_SHADER, vtxShSrc);
         var fragShader = createShader(gl, gl.FRAGMENT_SHADER, fragShSrc);
-        var prog = createProgram(gl, vtxShader, fragShader);	
+        prog = createProgram(gl, vtxShader, fragShader);	
         
         //Avisa ao webgl que deve usar o seguinte programa
         gl.useProgram(prog);
 
+        //Inicializa Ã¡rea de desenho: viewport e cor de limpeza; modo de mistura de cor;limpa a tela
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.clearColor(0, 0, 0, 1);
+        gl.enable( gl.BLEND );
+        gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+        gl.enable(gl.DEPTH_TEST)
+        //Não renderize faces que não vemos
+        //gl.enable(gl.CULL_FACE)
+
     }
-    //Define coordenadas dos triÃ¢ngulos
-    /*var coordTriangles = new Float32Array([
-                                            -0.5,  0.5, 1.0, 1.0, 0.0, 1.0, 
-                                            -0.5, -0.5, 1.0, 0.0, 0.0, 1.0, 
-                                            0.5, -0.5, 1.0, 1.0, 0.0, 1.0,
-                                            0.5,  0.5, 1.0, 0.0, 0.0, 1.0, 
-                                            -0.5, 0.5, 1.0, 1.0, 0.0, 1.0
-                                            ]);
-    */									
-    
+}
+// Onde é setado os poligonos da cena, configurado as texturas e etc.
+function configScene(){
+    //Define coordenadas dos triangulos e suas propriedades (cor ou textura)
+    	
     var coordTriangles = new Float32Array([
-                                            -0.5,  0.5, 0.0, 0.0, 
-                                            -0.5, -0.5, 0.0, 1.0,
-                                                0.5, -0.5, 1.0, 1.0, 
-                                                0.5,  0.5, 1.0, 0.0, 
-                                                -0.5, 0.5, 0.0, 0.0
+                                        //Primeiro Quadrado
+                                        //    x     y    z   tx   ty
+                                            -0.5,  0.5, 0.0, 0.0, 0.0, 
+                                            -0.5, -0.5, 0.0, 0.0, 1.0,
+                                             0.5, -0.5, 0.0, 1.0, 1.0, 
+                                             0.5,  0.5, 0.0, 1.0, 0.0, 
+                                            -0.5,  0.5, 0.0, 0.0, 0.0,
+                                        
+                                        //Segundo quadrado
+                                            -0.5, -0.5, 0.0, 1.0, 1.0,
+                                            -0.5,  0.5, 0.0, 1.0, 0.0,
+                                            -0.5,  0.5, 1.0, 0.0, 0.0,
+                                            -0.5, -0.5, 1.0, 0.0, 1.0,
+                                            -0.5, -0.5, 0.0, 1.0, 1.0,
+                                        //Terceiro Quadrado
+                                             0.5, -0.5, 1.0, 1.0, 1.0,
+                                             0.5, -0.5, 0.0, 1.0, 0.0,
+                                            -0.5, -0.5, 0.0, 0.0, 0.0,
+                                            -0.5, -0.5, 1.0, 0.0, 1.0,
+                                             0.5, -0.5, 1.0, 1.0, 1.0,
+
                                             ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufPtr = gl.createBuffer();
@@ -117,10 +144,10 @@ function draw()
     gl.enableVertexAttribArray(positionPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
     gl.vertexAttribPointer(positionPtr, 
-                            2,        //quantidade de dados em cada processamento
+                            3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
-                            4*4,      //tamanho do bloco de dados a processar em cada passo
+                            5*4,      //tamanho do bloco de dados a processar em cada passo
                                         //0 indica que o tamanho do bloco Ã© igual a tamanho
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
                             0         //salto inicial (em bytes)
@@ -133,10 +160,10 @@ function draw()
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
-                            4*4,      //tamanho do bloco de dados a processar em cada passo
+                            5*4,      //tamanho do bloco de dados a processar em cada passo
                                         //0 indica que o tamanho do bloco Ã© igual a tamanho
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
-                            2*4       //salto inicial (em bytes)
+                            3*4       //salto inicial (em bytes)
                             );
     
     //Carregar textura na gpu
@@ -165,23 +192,74 @@ function draw()
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
+
+    //Configura a distância focal
+    dfPtr = gl.getUniformLocation(prog,"df")
+    gl.uniform1f(dfPtr,df)
+
+
+}    
     
-    //Inicializa Ã¡rea de desenho: viewport e cor de limpeza; limpa a tela
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0, 0, 0, 1);
-    gl.enable( gl.BLEND );
-    gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+function draw(){
+
+    //Ponteiro para a matriz de transformação
+    var transfPtr = gl.getUniformLocation(prog,"trans_mat")
     
+
+    var mat_rot_X =math.matrix([
+        [1, 0, 0, 0],
+        [0, Math.cos(angle* Math.PI/180), -Math.sin(angle* Math.PI/180), 0],
+        [0, Math.sin(angle* Math.PI/180),  Math.cos(angle* Math.PI/180), 0], 
+        [0, 0, 0, 1]
+    ]
+    )
     
-    gl.clear( gl.COLOR_BUFFER_BIT);
-    
+    var mat_rot_Y =math.matrix([
+        [Math.cos(angle* Math.PI/180), 0, -Math.sin(angle* Math.PI/180), 0],
+        [0, 1, 0, 0],
+        [Math.sin(angle* Math.PI/180), 0,  Math.cos(angle* Math.PI/180), 0],
+        [0, 0, 0, 1]
+    ])
+
+    var mat_rot_Z =math.matrix([
+        [Math.cos(angle* Math.PI/180), -Math.sin(angle* Math.PI/180), 0, 0],
+        [Math.sin(angle* Math.PI/180),  Math.cos(angle* Math.PI/180), 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ])
+
+    var transf = math.multiply(mat_rot_Y,mat_rot_X)
+    transf = math.multiply(mat_rot_Z,transf)
+
+    transf = math.flatten(transf)._data
+
+    gl.uniformMatrix4fv(transfPtr,false,transf)
+
+    //Limpa a tela e o buffer de profundidade
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);    
     //Cria um ponteiro para a variável que indica qual o slot onde a textura está
     var texPtr =gl.getUniformLocation(prog,"text")
     //Muda o valor dessa variável
     gl.uniform1i(texPtr,0)
 
+    //Desenha o primeiro quadrado
     gl.drawArrays(gl.TRIANGLES, 0,3);
-
-    gl.uniform1i(texPtr,1)
     gl.drawArrays(gl.TRIANGLES,2,3);
+
+    //Troca a textura
+    gl.uniform1i(texPtr,1)
+    //Desenha o segundo quadrado
+    gl.drawArrays(gl.TRIANGLES,5,3)
+    gl.drawArrays(gl.TRIANGLES,7,3)
+
+    //Desenha com textura interpolada
+    gl.uniform1i(texPtr,0)
+    gl.drawArrays(gl.TRIANGLES,10,3)
+    gl.uniform1i(texPtr,1)
+    gl.drawArrays(gl.TRIANGLES,12,3)
+
+
+    angle++
+    
+    requestAnimationFrame(draw)
 }
