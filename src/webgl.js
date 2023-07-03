@@ -195,7 +195,7 @@ function configScene(){
 
 }   
 
-
+//Cria matriz de perspectiva
 function createPerspective(fovy,aspect,near,far){
 
     fovy = fovy*Math.PI/180.0
@@ -214,12 +214,48 @@ function createPerspective(fovy,aspect,near,far){
     ])
     return proj
 }
+
+function createCamera(pos, target, up){
+
+    var zc =math.subtract(pos,target)
+    zc = math.divide(zc,math.norm(zc))
     
+    var yt = math.subtract(up, pos)
+    yt = math.divide(yt,math.norm(yt))
+    
+    var xc = math.cross(yt, zc)
+    xc = math.divide(xc,math.norm(xc))
+    
+    var yc = math.cross(zc, xc);
+    yc = math.divide(yc,math.norm(yc))
+    
+    var mt = math.inv(math.transpose(math.matrix([xc,yc,zc])))
+    
+    mt = math.resize(mt,[4,4],0)
+
+    mt._data[3][3] =1
+    
+    mov = math.matrix([
+                        [1, 0, 0, -pos[0]], 
+                        [0, 1, 0, -pos[1]], 
+                        [0, 0, 1, -pos[2]], 
+                        [0, 0, 0, 1]
+                    ])
+    
+    var cam = math.multiply(mt,mov)
+    
+    return cam
+}
+
+  
+
 function draw(){
 
     //Criar matriz de projeção
 
-    mproj = createPerspective(20,gl.canvas.width/gl.canvas.height,1,50 )
+    var mproj = createPerspective(20,gl.canvas.width/gl.canvas.height,1,50 )
+
+    var cam = createCamera([5,5,5],[0,0,0],[5,6,5])
 
     //Ponteiro para a matriz de transformação
     var transfPtr = gl.getUniformLocation(prog,"trans_mat")
@@ -255,7 +291,7 @@ function draw(){
 
     var transf = math.multiply(mat_rot_Y,mat_rot_X)
     transf = math.multiply(mat_rot_Z,transf)
-    transf = math.multiply(tz,transf)
+    transf = math.multiply(cam,transf)
     transf = math.multiply(mproj,transf)
 
     transf = math.flatten(math.transpose(transf))._data
