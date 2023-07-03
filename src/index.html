@@ -31,11 +31,16 @@
     //Variavel para inserir as coordenadas de textura no frag shader
     varying vec2 v_textCoord;
 
+    //Atributo para as normais
+    attribute vec3 normal;
+    varying vec3 v_normal;
+
     void main(){
         //Atribuição do valores
         color = fcolor;
         v_textCoord = ftextCoord;
         gl_Position = trans_mat*position;
+        v_normal = normal;
     }
 
 </script>
@@ -49,9 +54,23 @@
 
     //Número do slot onde está a textura
     uniform sampler2D text;
+
+    varying vec3 v_normal;
+
+    uniform vec3 light_direction;
     
     void main(){
-        gl_FragColor = texture2D(text,v_textCoord);
+        
+        vec3 v_normal_n = normalize(v_normal);
+        vec3 light_direction_n = normalize(-light_direction);
+
+        float light =dot(light_direction_n,v_normal_n);
+
+        if (light<0.0){
+            light=0.0;
+        }
+
+        gl_FragColor = vec4(light* texture2D(text,v_textCoord).rgb,1);
 
     }
 

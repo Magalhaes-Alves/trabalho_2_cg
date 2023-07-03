@@ -119,7 +119,7 @@ function configScene(){
                                              0.5, -0.5, 0.0, 1.0, 1.0, 
                                              0.5,  0.5, 0.0, 1.0, 0.0, 
                                             -0.5,  0.5, 0.0, 0.0, 0.0,
-                                        
+
                                         //Segundo quadrado
                                             -0.5, -0.5, 0.0, 1.0, 1.0,
                                             -0.5,  0.5, 0.0, 1.0, 0.0,
@@ -140,10 +140,10 @@ function configScene(){
     gl.bufferData(gl.ARRAY_BUFFER, coordTriangles, gl.STATIC_DRAW);
     
     //Pega ponteiro para o atributo "position" do vertex shader
-    var positionPtr = gl.getAttribLocation(prog, "position");
-    gl.enableVertexAttribArray(positionPtr);
+    var normalPtr = gl.getAttribLocation(prog, "position");
+    gl.enableVertexAttribArray(normalPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(positionPtr, 
+    gl.vertexAttribPointer(normalPtr, 
                             3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -153,10 +153,10 @@ function configScene(){
                             0         //salto inicial (em bytes)
                             );
     
-    var textCoordPtr = gl.getAttribLocation(prog, "ftextCoord");
-    gl.enableVertexAttribArray(textCoordPtr);
+    var lightPtr = gl.getAttribLocation(prog, "ftextCoord");
+    gl.enableVertexAttribArray(lightPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(textCoordPtr, 
+    gl.vertexAttribPointer(lightPtr, 
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -192,6 +192,51 @@ function configScene(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
+
+    var normals = new Float32Array([
+                                    //Normal primeiro Quadrado
+                                    //  x  y  z
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    //Normal segundo quadrado
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                    //Normal terceiro Quadrado
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                    ]);
+//Cria buffer na GPU e copia coordenadas para ele
+var bufnormalsPtr = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, bufnormalsPtr);
+gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
+
+//Pega ponteiro para o atributo "position" do vertex shader
+var normalPtr = gl.getAttribLocation(prog, "normal");
+gl.enableVertexAttribArray(normalPtr);
+//Especifica a cÃ³pia dos valores do buffer para o atributo
+gl.vertexAttribPointer(normalPtr, 
+                        3,        //quantidade de dados em cada processamento
+                        gl.FLOAT, //tipo de cada dado (tamanho)
+                        false,    //nÃ£o normalizar
+                        3*4,      //tamanho do bloco de dados a processar em cada passo
+                                //0 indica que o tamanho do bloco Ã© igual a tamanho
+                                //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
+                        0         //salto inicial (em bytes)
+                        )
+
+var lightPtr =gl.getUniformLocation(prog,"light_direction")
+gl.uniform3fv(lightPtr,[0.1,-1,0.5])
+
 
 }   
 
