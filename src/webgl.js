@@ -153,10 +153,10 @@ function configScene(){
                             0         //salto inicial (em bytes)
                             );
     
-    var lightPtr = gl.getAttribLocation(prog, "ftextCoord");
-    gl.enableVertexAttribArray(lightPtr);
+    var texPtr = gl.getAttribLocation(prog, "texCoord");
+    gl.enableVertexAttribArray(texPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(lightPtr, 
+    gl.vertexAttribPointer(texPtr, 
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -215,27 +215,27 @@ function configScene(){
                                         0, 1, 0,
                                         0, 1, 0,
                                     ]);
-//Cria buffer na GPU e copia coordenadas para ele
-var bufnormalsPtr = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, bufnormalsPtr);
-gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
+    //Cria buffer na GPU e copia coordenadas para ele
+    var bufnormalsPtr = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufnormalsPtr);
+    gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 
-//Pega ponteiro para o atributo "position" do vertex shader
-var normalPtr = gl.getAttribLocation(prog, "normal");
-gl.enableVertexAttribArray(normalPtr);
-//Especifica a cÃ³pia dos valores do buffer para o atributo
-gl.vertexAttribPointer(normalPtr, 
-                        3,        //quantidade de dados em cada processamento
-                        gl.FLOAT, //tipo de cada dado (tamanho)
-                        false,    //nÃ£o normalizar
-                        3*4,      //tamanho do bloco de dados a processar em cada passo
-                                //0 indica que o tamanho do bloco Ã© igual a tamanho
-                                //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
-                        0         //salto inicial (em bytes)
-                        )
+    //Pega ponteiro para o atributo "position" do vertex shader
+    var normalPtr = gl.getAttribLocation(prog, "normal");
+    gl.enableVertexAttribArray(normalPtr);
+    //Especifica a cÃ³pia dos valores do buffer para o atributo
+    gl.vertexAttribPointer(normalPtr, 
+                            3,        //quantidade de dados em cada processamento
+                            gl.FLOAT, //tipo de cada dado (tamanho)
+                            false,    //nÃ£o normalizar
+                            3*4,      //tamanho do bloco de dados a processar em cada passo
+                                    //0 indica que o tamanho do bloco Ã© igual a tamanho
+                                    //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
+                            0         //salto inicial (em bytes)
+                            )
 
-var lightPtr =gl.getUniformLocation(prog,"light_direction")
-gl.uniform3fv(lightPtr,[-0.2,-1,0.7])
+    var texPtr =gl.getUniformLocation(prog,"light_direction")
+    gl.uniform3fv(texPtr,[-0.2,-1,0.7])
 
 
 }   
@@ -302,7 +302,6 @@ function draw(){
 
     var cam = createCamera([5,5,5],[0,0,0],[5,6,5])
 
-    
     var tz =math.matrix([
         [1,0,0,0],
         [0,1,0,0],
@@ -333,10 +332,10 @@ function draw(){
     ])
 
     
-    
-
     var transf = math.multiply(mat_rot_Y,mat_rot_X)
     transf = math.multiply(mat_rot_Z,transf)
+    
+
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
 
@@ -346,8 +345,9 @@ function draw(){
     var transProjfPtr = gl.getUniformLocation(prog,"transf_projecao")
     gl.uniformMatrix4fv(transProjfPtr,false,transf_proj)
 
+    transf = math.flatten(math.transpose(transf))._data
     var transfPtr = gl.getUniformLocation(prog,"transf")
-    gl.uniform3fv(transfPtr,false,transf)
+    gl.uniformMatrix4fv(transfPtr,false,transf)
 
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);    
