@@ -235,7 +235,7 @@ gl.vertexAttribPointer(normalPtr,
                         )
 
 var lightPtr =gl.getUniformLocation(prog,"light_direction")
-gl.uniform3fv(lightPtr,[0.1,-1,0.5])
+gl.uniform3fv(lightPtr,[-0.2,-1,0.7])
 
 
 }   
@@ -302,8 +302,6 @@ function draw(){
 
     var cam = createCamera([5,5,5],[0,0,0],[5,6,5])
 
-    //Ponteiro para a matriz de transformação
-    var transfPtr = gl.getUniformLocation(prog,"trans_mat")
     
     var tz =math.matrix([
         [1,0,0,0],
@@ -334,14 +332,22 @@ function draw(){
         [0, 0, 0, 1]
     ])
 
+    
+    
+
     var transf = math.multiply(mat_rot_Y,mat_rot_X)
     transf = math.multiply(mat_rot_Z,transf)
-    transf = math.multiply(cam,transf)
-    transf = math.multiply(mproj,transf)
+    var transf_proj = math.multiply(cam,transf)
+    transf_proj = math.multiply(mproj,transf_proj)
 
-    transf = math.flatten(math.transpose(transf))._data
+    transf_proj = math.flatten(math.transpose(transf_proj))._data
 
-    gl.uniformMatrix4fv(transfPtr,false,transf)
+    //Ponteiro para a matriz de transformação
+    var transProjfPtr = gl.getUniformLocation(prog,"transf_projecao")
+    gl.uniformMatrix4fv(transProjfPtr,false,transf_proj)
+
+    var transfPtr = gl.getUniformLocation(prog,"transf")
+    gl.uniform3fv(transfPtr,false,transf)
 
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);    

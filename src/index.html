@@ -18,13 +18,16 @@
 <script id="vertex-shader" type="notjs">
     // position -> vetor de coordenadas do vertice -> [x, y, z, 1]
     attribute vec4 position;
-    //ftextCoord -> vetor com as coordenadas de textura do vértice -> [tx,ty]
-    attribute vec2 ftextCoord;
+
+    //texCoord -> vetor com as coordenadas de textura do vértice -> [tx,ty]
+    attribute vec2 texCoord;
+
     // fcolor -> vetor com os valores RGBA de um vértice -> [R, G, B, A]
     attribute vec4 fcolor;
 
     //Matrizes de transformação
-    uniform mat4 trans_mat;
+    uniform mat4 transf_projecao;
+    uniform mat4 transf;
 
     //Variavel para inserir cor no frag shader
     varying vec4 color;
@@ -38,9 +41,13 @@
     void main(){
         //Atribuição do valores
         color = fcolor;
-        v_textCoord = ftextCoord;
-        gl_Position = trans_mat*position;
-        v_normal = normal;
+
+        v_textCoord = texCoord;
+
+        gl_Position = transf_projecao*position;
+
+        v_normal = (transf*vec4(normal,1.0)).xyz;
+        
     }
 
 </script>
@@ -66,9 +73,7 @@
 
         float light =dot(light_direction_n,v_normal_n);
 
-        if (light<0.0){
-            light=0.0;
-        }
+        if (light<0.0) light=0.0;
 
         gl_FragColor = vec4(light* texture2D(text,v_textCoord).rgb,1);
 
