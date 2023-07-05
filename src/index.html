@@ -65,6 +65,7 @@
     varying vec3 v_normal;
 
     uniform vec3 light_direction;
+    uniform vec3 light_color;
     
     void main(){
         
@@ -75,7 +76,7 @@
 
         if (light<0.0) light=0.0;
 
-        gl_FragColor = vec4(light* texture2D(text,v_textCoord).rgb,1);
+        gl_FragColor = vec4(light_color*light* texture2D(text,v_textCoord).rgb,1);
 
     }
 

@@ -153,10 +153,10 @@ function configScene(){
                             0         //salto inicial (em bytes)
                             );
     
-    var texPtr = gl.getAttribLocation(prog, "texCoord");
-    gl.enableVertexAttribArray(texPtr);
+    var light_color_ptr = gl.getAttribLocation(prog, "texCoord");
+    gl.enableVertexAttribArray(light_color_ptr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(texPtr, 
+    gl.vertexAttribPointer(light_color_ptr, 
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -233,9 +233,15 @@ function configScene(){
                                     //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
                             0         //salto inicial (em bytes)
                             )
+    //Adiciona direção a luz
+    //Negativo é entrando positivo é saindo da tela
+    var lightPtr =gl.getUniformLocation(prog,"light_direction")
+    gl.uniform3fv(lightPtr,[-0.2,-1,-0.7])
+    
+    //Adiciona cor a luz
+    var light_color_ptr =gl.getUniformLocation(prog,"light_color")
+    gl.uniform3fv(light_color_ptr,[1.0,0.5,1.0])
 
-    var texPtr =gl.getUniformLocation(prog,"light_direction")
-    gl.uniform3fv(texPtr,[-0.2,-1,0.7])
 
 
 }   
@@ -300,7 +306,8 @@ function draw(){
 
     var mproj = createPerspective(20,gl.canvas.width/gl.canvas.height,1,50 )
 
-    var cam = createCamera([5,5,5],[0,0,0],[5,6,5])
+    /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
+    var cam = createCamera([0,0,5],[0.0,0.0,0],[0.5,1.5,5])
 
     var tz =math.matrix([
         [1,0,0,0],
