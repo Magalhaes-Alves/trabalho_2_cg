@@ -6,6 +6,8 @@ var gl
 var prog
 var angle=0
 
+var cam_position=[0,0,5]
+
 
 function getGL(canvas)
 {
@@ -240,7 +242,12 @@ function configScene(){
     
     //Adiciona cor a luz
     var light_color_ptr =gl.getUniformLocation(prog,"light_color")
-    gl.uniform3fv(light_color_ptr,[1.0,0.5,1.0])
+
+    gl.uniform3fv(light_color_ptr,[1.0,1.0,1.0])
+
+    var light_position_ptr =gl.getUniformLocation(prog,"light_position")
+
+    gl.uniform3fv(light_position_ptr,[0.5,1.0,1.0])
 
 
 
@@ -298,17 +305,24 @@ function createCamera(pos, target, up){
     return cam
 }
 
-  
+
+function criatransformacao3d(){
+    return math.identity(4)
+}
+
+function comportranslacao3d(m, tx, ty, tz){
+    m1 = math.matrix([[1, 0, 0, tx], 
+                     [0, 1, 0, ty],
+                     [0, 0, 1, tz], 
+                     [0, 0, 0, 1,]])*m
+    return math.multiply(m1,m)
+}
+
+ 
 
 function draw(){
 
-    //Criar matriz de projeção
-
-    var mproj = createPerspective(20,gl.canvas.width/gl.canvas.height,1,50 )
-
-    /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
-    var cam = createCamera([0,0,5],[0.0,0.0,0],[0.5,1.5,5])
-
+    
     var tz =math.matrix([
         [1,0,0,0],
         [0,1,0,0],
@@ -338,20 +352,30 @@ function draw(){
         [0, 0, 0, 1]
     ])
 
+    //Criar matriz de projeção
+
+    var mproj = createPerspective(30,gl.canvas.width/gl.canvas.height,1,50 )
+
+    /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
+    var cam = createCamera(cam_position,[0.0,0.0,0.0],[cam_position[0],cam_position[1]+1,cam_position[2]])
+
     
     var transf = math.multiply(mat_rot_Y,mat_rot_X)
     transf = math.multiply(mat_rot_Z,transf)
     
+    transf = math.identity(4)
 
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
 
     transf_proj = math.flatten(math.transpose(transf_proj))._data
 
-    //Ponteiro para a matriz de transformação
+
+    //Ponteiro para a matriz de transformação com projeção de camera
     var transProjfPtr = gl.getUniformLocation(prog,"transf_projecao")
     gl.uniformMatrix4fv(transProjfPtr,false,transf_proj)
 
+    //Matriz de transformação sem projeção de camera
     transf = math.flatten(math.transpose(transf))._data
     var transfPtr = gl.getUniformLocation(prog,"transf")
     gl.uniformMatrix4fv(transfPtr,false,transf)
@@ -379,8 +403,21 @@ function draw(){
     gl.uniform1i(texPtr,1)
     gl.drawArrays(gl.TRIANGLES,12,3)
 
-
-    angle++
     
+    /* document.addEventListener("keyup",(event)=>{
+        
+        botton = event.key
+
+        if (botton== "ArrowUp"){
+            cam_position[2]=cam_position[2]+1
+            console.log(cam_position);
+        }
+    }) */
+
+
     requestAnimationFrame(draw)
+
+
+    
 }
+
