@@ -306,18 +306,48 @@ function createCamera(pos, target, up){
 }
 
 
-function criatransformacao3d(){
-    return math.identity(4)
+function createTransformation(n){
+    return math.identity(n)
 }
 
-function comportranslacao3d(m, tx, ty, tz){
+function composeTranslation(m, tx, ty, tz){
     m1 = math.matrix([[1, 0, 0, tx], 
                      [0, 1, 0, ty],
                      [0, 0, 1, tz], 
-                     [0, 0, 0, 1,]])*m
+                     [0, 0, 0, 1,]])
     return math.multiply(m1,m)
 }
 
+function composeRotation(m,ang,eixo){
+
+    var mt
+    ang = ang* Math.PI/180
+
+    if (eixo == 'x'){
+        mt =math.matrix([
+            [1, 0, 0, 0],
+            [0, Math.cos(ang), -Math.sin(ang), 0],
+            [0, Math.sin(ang),  Math.cos(ang), 0], 
+            [0, 0, 0, 1]]
+        )
+
+    }else if (eixo =='y'){
+        mt =math.matrix([
+            [Math.cos(ang), 0, -Math.sin(ang), 0],
+            [0, 1, 0, 0],
+            [Math.sin(ang), 0,  Math.cos(ang), 0],
+            [0, 0, 0, 1]])
+
+    }else if( eixo=='z'){
+        mt =math.matrix([
+            [Math.cos(ang), -Math.sin(ang), 0, 0],
+            [Math.sin(ang),  Math.cos(ang), 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]])
+    }
+    
+    return math.multiply(mt,m)
+}
  
 
 function draw(){
@@ -330,27 +360,7 @@ function draw(){
         [0,0,0,1]
     ])
 
-    var mat_rot_X =math.matrix([
-        [1, 0, 0, 0],
-        [0, Math.cos(angle* Math.PI/180), -Math.sin(angle* Math.PI/180), 0],
-        [0, Math.sin(angle* Math.PI/180),  Math.cos(angle* Math.PI/180), 0], 
-        [0, 0, 0, 1]
-    ]
-    )
-    
-    var mat_rot_Y =math.matrix([
-        [Math.cos(angle* Math.PI/180), 0, -Math.sin(angle* Math.PI/180), 0],
-        [0, 1, 0, 0],
-        [Math.sin(angle* Math.PI/180), 0,  Math.cos(angle* Math.PI/180), 0],
-        [0, 0, 0, 1]
-    ])
 
-    var mat_rot_Z =math.matrix([
-        [Math.cos(angle* Math.PI/180), -Math.sin(angle* Math.PI/180), 0, 0],
-        [Math.sin(angle* Math.PI/180),  Math.cos(angle* Math.PI/180), 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
-    ])
 
     //Criar matriz de projeção
 
@@ -360,10 +370,12 @@ function draw(){
     var cam = createCamera(cam_position,[0.0,0.0,0.0],[cam_position[0],cam_position[1]+1,cam_position[2]])
 
     
-    var transf = math.multiply(mat_rot_Y,mat_rot_X)
-    transf = math.multiply(mat_rot_Z,transf)
+    //var transf = math.multiply(mat_rot_Y,mat_rot_X)
+    //transf = math.multiply(mat_rot_Z,transf)
     
-    transf = math.identity(4)
+
+    var transf = createTransformation(4)
+    transf = composeRotation(transf,angle,'y')
 
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -404,20 +416,27 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES,12,3)
 
     
-    /* document.addEventListener("keyup",(event)=>{
-        
-        botton = event.key
+    
 
-        if (botton== "ArrowUp"){
-            cam_position[2]=cam_position[2]+1
-            console.log(cam_position);
-        }
-    }) */
-
-
+    angle++
     requestAnimationFrame(draw)
 
 
     
 }
 
+document.addEventListener("keyup",(event)=>{
+        
+        botton = event.key
+
+        if (botton== "ArrowUp"){
+            cam_position[2]=cam_position[2]-1
+            console.log(cam_position);
+        }
+
+        if (botton== "ArrowDown"){
+            cam_position[2]=cam_position[2]+1
+            console.log(cam_position);
+        }
+
+    })
