@@ -363,19 +363,13 @@ function draw(){
 
 
     //Criar matriz de projeção
-
     var mproj = createPerspective(30,gl.canvas.width/gl.canvas.height,1,50 )
 
     /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
     var cam = createCamera(cam_position,[0.0,0.0,0.0],[cam_position[0],cam_position[1]+1,cam_position[2]])
-
-    
-    //var transf = math.multiply(mat_rot_Y,mat_rot_X)
-    //transf = math.multiply(mat_rot_Z,transf)
     
 
     var transf = createTransformation(4)
-    transf = composeRotation(transf,angle,'y')
 
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -425,18 +419,40 @@ function draw(){
     
 }
 
-document.addEventListener("keyup",(event)=>{
+document.addEventListener("keydown",(event)=>{
         
         botton = event.key
 
         if (botton== "ArrowUp"){
-            cam_position[2]=cam_position[2]-1
+            cam_position[2]=cam_position[2]-0.1
             console.log(cam_position);
         }
 
         if (botton== "ArrowDown"){
-            cam_position[2]=cam_position[2]+1
+            cam_position[2]=cam_position[2]+0.1
             console.log(cam_position);
         }
+
+        if (botton== "ArrowLeft"){
+            cam_position[0]=cam_position[0]+0.1
+            console.log(cam_position);
+        }
+
+        if (botton== "ArrowRight"){
+            cam_position[0]=cam_position[0]-0.1
+            console.log(cam_position);
+        }
+
+        if (botton== "w"){
+            cam_position[1]=cam_position[1]+0.1
+            console.log(cam_position);
+        }
+
+        if (botton== "s"){
+            cam_position[1]=cam_position[1]-0.1
+            console.log(cam_position);
+        }
+
+
 
     })
