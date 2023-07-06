@@ -370,6 +370,9 @@ function draw(){
     
 
     var transf = createTransformation(4)
+    transf = composeRotation(transf,angle,'x')
+    transf = composeRotation(transf,angle,'y')
+    transf = composeRotation(transf,angle,'z')
 
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -413,7 +416,7 @@ function draw(){
     
 
     angle++
-    requestAnimationFrame(draw)
+    //requestAnimationFrame(draw)
 
 
     
