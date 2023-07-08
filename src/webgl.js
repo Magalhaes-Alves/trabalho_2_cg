@@ -6,7 +6,8 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[0,0,5]
+var cam_position=[5,4.5,5]
+var cam_look = [0.0,0.0,0.0]
 
 
 function getGL(canvas)
@@ -114,38 +115,51 @@ function configScene(){
     //Define coordenadas dos triangulos e suas propriedades (cor ou textura)
     	
     var coordTriangles = new Float32Array([
-                                        //Primeiro Quadrado
+                                        //Parede Frente - 0
                                         //    x     y    z    r    g    b
                                             -0.5,  0.75, 0.0, 1.0, 1.0, 0.0, 
                                             -0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
                                              0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
                                              0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
                                             -0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
-                                            
+                                        
+                                        //Porta - 5
                                             -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
                                             -0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
                                              0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
                                              0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
-                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0
+                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
+
+
+                                        // Parede Lateral Fundo -15
+                                        -0.5,  0.75, -0.8, 1.0, 1.0, 0.0, 
+                                        -0.5,   0.0, -0.8, 1.0, 1.0, 0.0,
+                                         0.5,   0.0, -0.8, 1.0, 1.0, 0.0,
+                                         0.5,  0.75, -0.8, 1.0, 1.0, 0.0,
+                                        -0.5,  0.75, -0.8, 1.0, 1.0, 0.0,
+                                        
+                                        //Parede Lateral Esquerda -10
+
+                                            -0.5,  0.75, -1, 1.0, 1.0, 0.0, 
+                                            -0.5,   0.0, -1, 1.0, 1.0, 0.0,
+                                            -0.5,   0.0,  0.0, 1.0, 1.0, 0.0,
+                                            -0.5,  0.75,  0.0, 1.0, 1.0, 0.0,
+                                            -0.5,  0.75,  -1, 1.0, 1.0, 0.0,
+
+                                        
                                             
 
+                                        
+                                        //Placa de Titulo -- Textura
 
-
-
-                                        /* //Segundo quadrado
-                                            -0.5, -0.5, 0.0, 1.0, 1.0,
-                                            -0.5,  0.5, 0.0, 1.0, 0.0,
-                                            -0.5,  0.5, 1.0, 0.0, 0.0,
-                                            -0.5, -0.5, 1.0, 0.0, 1.0,
-                                            -0.5, -0.5, 0.0, 1.0, 1.0,
-                                        //Terceiro Quadrado
-                                             0.5, -0.5, 1.0, 1.0, 1.0,
-                                             0.5, -0.5, 0.0, 1.0, 0.0,
-                                            -0.5, -0.5, 0.0, 0.0, 0.0,
-                                            -0.5, -0.5, 1.0, 0.0, 1.0,
-                                             0.5, -0.5, 1.0, 1.0, 1.0, */
+                                            /* -0.40, 0.68, 0.01, 1.0, 1.0, 1.0,
+                                            -0.40, 0.50, 0.01, 1.0, 1.0, 1.0,
+                                             0.40, 0.50, 0.01, 1.0, 1.0, 1.0,
+                                             0.40, 0.68, 0.01, 1.0, 1.0, 1.0,
+                                            -0.40, 0.68, 0.01, 1.0, 1.0, 1.0 */
 
                                             ]);
+    console.log(coordTriangles.length/6);                                            
     //Cria buffer na GPU e copia coordenadas para ele
     var bufPtr = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufPtr);
@@ -381,10 +395,11 @@ function draw(){
     var mproj = createPerspective(30,gl.canvas.width/gl.canvas.height,1,50 )
 
     /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
-    var cam = createCamera(cam_position,[0.0,0.0,0.0],[cam_position[0],cam_position[1]+1,cam_position[2]])
+    var cam = createCamera(cam_position,cam_look,[cam_position[0],cam_position[1]+1,cam_position[2]])
     
 
     var transf = createTransformation(4)
+    transf= composeRotation(transf,angle,'y')
     
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -413,14 +428,26 @@ function draw(){
     //Muda o valor dessa variável
     gl.uniform1i(texPtr,0)
     gl.uniform1i(is_colorPtr,1)
-    //Desenha o primeiro quadrado
+    //Desenha parede da frente
     gl.drawArrays(gl.TRIANGLES, 0,3);
     gl.drawArrays(gl.TRIANGLES,2,3);
 
+    //Desenha Porta
     gl.drawArrays(gl.TRIANGLES, 5,3);
     gl.drawArrays(gl.TRIANGLES,7,3);
 
-    angle++
+    //Desenhar parede esquerda
+    gl.drawArrays(gl.TRIANGLES, 10,3);
+    gl.drawArrays(gl.TRIANGLES, 12,3);
+
+
+    gl.drawArrays(gl.TRIANGLES,15,3)
+    gl.drawArrays(gl.TRIANGLES,17,3)
+
+    //Desenha placa
+ 
+    
+
     requestAnimationFrame(draw)
 
 
@@ -442,13 +469,15 @@ document.addEventListener("keydown",(event)=>{
         }
 
         if (botton== "ArrowLeft"){
-            cam_position[0]=cam_position[0]+0.1
-            console.log(cam_position);
+            //cam_position[0]=cam_position[0]+0.1
+            //console.log(cam_position);
+            angle+=2
         }
 
         if (botton== "ArrowRight"){
-            cam_position[0]=cam_position[0]-0.1
-            console.log(cam_position);
+            //cam_position[0]=cam_position[0]-0.1
+            //console.log(cam_position);
+            angle-=2
         }
 
         if (botton== "w"){
