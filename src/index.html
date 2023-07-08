@@ -41,6 +41,9 @@
     uniform vec3 light_position;
     varying vec3 pointToLight;
 
+    uniform vec3 cam_pos;
+    varying vec3 pointToCam;
+
 
     void main(){
         //Atribuição do valores
@@ -53,6 +56,9 @@
         v_normal = (transf*vec4(normal,1.0)).xyz;
 
         pointToLight = light_position - position.xyz;
+
+        pointToCam = cam_pos - position.xyz;
+
         
     }
 
@@ -74,23 +80,30 @@
     uniform vec3 light_color;
 
     varying vec3 pointToLight;
+    varying vec3 pointToCam;
 
     uniform int is_color;
 
     void main(){
         
         vec3 pToLight = normalize(pointToLight);
+        vec3 pToCam = normalize(pointToCam);
+        
+        vec3 halfVec = normalize(pToCam+pToLight);
 
         vec3 v_normal_n = normalize(v_normal);
         vec3 light_direction_n = normalize(-light_direction);
 
-        float light_directional =dot(light_direction_n,v_normal_n);
-        float light_pontual =dot(pToLight,v_normal_n);
+
+        float light_directional =dot(v_normal_n,light_direction_n);
+        float light_pontual =dot(v_normal_n,pToLight);
+        float light_especular = dot(v_normal_n, halfVec);
 
         vec3 color_tex;
 
         if (light_directional<0.0) light_directional=0.0;
         if (light_pontual<0.0) light_pontual=0.0;
+        if (light_especular<0.0) light_especular = 0.0;
 
         if (is_color ==1){
             color_tex = color.rgb;
@@ -98,8 +111,13 @@
             color_tex = texture2D(text,v_textCoord).rgb;
         }
 
+
         //gl_FragColor = vec4(light_color*light_directional* texture2D(text,v_textCoord).rgb,1);
-        gl_FragColor = vec4(light_color*light_pontual* texture2D(text,v_textCoord).rgb,1);
+        gl_FragColor.rgb =0.2*light_color*color_tex;
+        gl_FragColor.rgb += 0.2*light_color*light_directional*color_tex;
+        gl_FragColor.rgb += 0.5*light_color*light_pontual* color_tex;
+        gl_FragColor.rgb += light_color*pow(light_especular,1000.0)*color_tex;
+        gl_FragColor.a =1.0;
     }
 
 </script>

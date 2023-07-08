@@ -242,12 +242,13 @@ function configScene(){
     
     //Adiciona cor a luz
     var light_color_ptr =gl.getUniformLocation(prog,"light_color")
-
     gl.uniform3fv(light_color_ptr,[1.0,1.0,1.0])
 
     var light_position_ptr =gl.getUniformLocation(prog,"light_position")
+    gl.uniform3fv(light_position_ptr,[0.25,1,0.5])
 
-    gl.uniform3fv(light_position_ptr,[0.5,1.0,1.0])
+    var cam_position_ptr =gl.getUniformLocation(prog,"cam_pos")
+    gl.uniform3fv(cam_position_ptr,cam_position)
 
 
 
@@ -406,7 +407,7 @@ function draw(){
     
 
     angle++
-    //requestAnimationFrame(draw)
+    requestAnimationFrame(draw)
 
 
     
