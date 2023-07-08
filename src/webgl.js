@@ -115,14 +115,24 @@ function configScene(){
     	
     var coordTriangles = new Float32Array([
                                         //Primeiro Quadrado
-                                        //    x     y    z   tx   ty
-                                            -0.5,  0.5, 0.0, 0.0, 0.0, 
-                                            -0.5, -0.5, 0.0, 0.0, 1.0,
-                                             0.5, -0.5, 0.0, 1.0, 1.0, 
-                                             0.5,  0.5, 0.0, 1.0, 0.0, 
-                                            -0.5,  0.5, 0.0, 0.0, 0.0,
+                                        //    x     y    z    r    g    b
+                                            -0.5,  0.75, 0.0, 1.0, 1.0, 0.0, 
+                                            -0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
+                                             0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
+                                             0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
+                                            -0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
+                                            
+                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
+                                            -0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
+                                             0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
+                                             0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
+                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0
+                                            
 
-                                        //Segundo quadrado
+
+
+
+                                        /* //Segundo quadrado
                                             -0.5, -0.5, 0.0, 1.0, 1.0,
                                             -0.5,  0.5, 0.0, 1.0, 0.0,
                                             -0.5,  0.5, 1.0, 0.0, 0.0,
@@ -133,7 +143,7 @@ function configScene(){
                                              0.5, -0.5, 0.0, 1.0, 0.0,
                                             -0.5, -0.5, 0.0, 0.0, 0.0,
                                             -0.5, -0.5, 1.0, 0.0, 1.0,
-                                             0.5, -0.5, 1.0, 1.0, 1.0,
+                                             0.5, -0.5, 1.0, 1.0, 1.0, */
 
                                             ]);
     //Cria buffer na GPU e copia coordenadas para ele
@@ -142,23 +152,37 @@ function configScene(){
     gl.bufferData(gl.ARRAY_BUFFER, coordTriangles, gl.STATIC_DRAW);
     
     //Pega ponteiro para o atributo "position" do vertex shader
-    var normalPtr = gl.getAttribLocation(prog, "position");
-    gl.enableVertexAttribArray(normalPtr);
+    var positionPtr = gl.getAttribLocation(prog, "position");
+    gl.enableVertexAttribArray(positionPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(normalPtr, 
+    gl.vertexAttribPointer(positionPtr, 
                             3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
-                            5*4,      //tamanho do bloco de dados a processar em cada passo
+                            6*4,      //tamanho do bloco de dados a processar em cada passo
                                         //0 indica que o tamanho do bloco Ã© igual a tamanho
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
                             0         //salto inicial (em bytes)
                             );
+
+    var bufColor = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufColor);
+    gl.bufferData(gl.ARRAY_BUFFER, coordTriangles, gl.STATIC_DRAW);
+
+    var colorPtr = gl.getAttribLocation(prog,"fcolor")
+    gl.enableVertexAttribArray(colorPtr)
+    gl.vertexAttribPointer(colorPtr,
+                            3,
+                            gl.FLOAT,
+                            false,
+                            6*4,
+                            3*4
+                            )
     
-    var light_color_ptr = gl.getAttribLocation(prog, "texCoord");
-    gl.enableVertexAttribArray(light_color_ptr);
+    /* var textCoordPtr = gl.getAttribLocation(prog, "texCoord");
+    gl.enableVertexAttribArray(textCoordPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(light_color_ptr, 
+    gl.vertexAttribPointer(textCoordPtr, 
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -193,7 +217,7 @@ function configScene(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1]) */
 
     var normals = new Float32Array([
                                     //Normal primeiro Quadrado
@@ -223,10 +247,10 @@ function configScene(){
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 
     //Pega ponteiro para o atributo "position" do vertex shader
-    var normalPtr = gl.getAttribLocation(prog, "normal");
-    gl.enableVertexAttribArray(normalPtr);
+    var positionPtr = gl.getAttribLocation(prog, "normal");
+    gl.enableVertexAttribArray(positionPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(normalPtr, 
+    gl.vertexAttribPointer(positionPtr, 
                             3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -361,13 +385,9 @@ function draw(){
     
 
     var transf = createTransformation(4)
-    transf = composeRotation(transf,angle,'x')
-    transf = composeRotation(transf,angle,'y')
-    transf = composeRotation(transf,angle,'z')
-
+    
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
-
     transf_proj = math.flatten(math.transpose(transf_proj))._data
 
 
@@ -375,36 +395,30 @@ function draw(){
     var transProjfPtr = gl.getUniformLocation(prog,"transf_projecao")
     gl.uniformMatrix4fv(transProjfPtr,false,transf_proj)
 
+    
     //Matriz de transformação sem projeção de camera
     transf = math.flatten(math.transpose(transf))._data
     var transfPtr = gl.getUniformLocation(prog,"transf")
     gl.uniformMatrix4fv(transfPtr,false,transf)
 
-    //Limpa a tela e o buffer de profundidade
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);    
-    //Cria um ponteiro para a variável que indica qual o slot onde a textura está
+    //Indica se é para usar textura ou cor
+    var is_colorPtr = gl.getUniformLocation(prog,"is_color")
+    //Indica o slot de textura a ser usado
     var texPtr =gl.getUniformLocation(prog,"text")
+    gl.uniform1i(is_colorPtr,1)
+
+    //Limpa a tela e o buffer de profundidade
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    //Cria um ponteiro para a variável que indica qual o slot onde a textura está
     //Muda o valor dessa variável
     gl.uniform1i(texPtr,0)
-
+    gl.uniform1i(is_colorPtr,1)
     //Desenha o primeiro quadrado
     gl.drawArrays(gl.TRIANGLES, 0,3);
     gl.drawArrays(gl.TRIANGLES,2,3);
 
-    //Troca a textura
-    gl.uniform1i(texPtr,1)
-    //Desenha o segundo quadrado
-    gl.drawArrays(gl.TRIANGLES,5,3)
-    gl.drawArrays(gl.TRIANGLES,7,3)
-
-    //Desenha com textura interpolada
-    gl.uniform1i(texPtr,0)
-    gl.drawArrays(gl.TRIANGLES,10,3)
-    gl.uniform1i(texPtr,1)
-    gl.drawArrays(gl.TRIANGLES,12,3)
-
-    
-    
+    gl.drawArrays(gl.TRIANGLES, 5,3);
+    gl.drawArrays(gl.TRIANGLES,7,3);
 
     angle++
     requestAnimationFrame(draw)
