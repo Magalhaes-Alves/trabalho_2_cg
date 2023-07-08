@@ -81,15 +81,22 @@
         
         vec3 pToLight = normalize(pointToLight);
 
-
         vec3 v_normal_n = normalize(v_normal);
         vec3 light_direction_n = normalize(-light_direction);
 
         float light_directional =dot(light_direction_n,v_normal_n);
         float light_pontual =dot(pToLight,v_normal_n);
 
+        vec3 color_tex;
+
         if (light_directional<0.0) light_directional=0.0;
         if (light_pontual<0.0) light_pontual=0.0;
+
+        if (is_color ==1){
+            color_tex = color.rgb;
+        }else{
+            color_tex = texture2D(text,v_textCoord).rgb;
+        }
 
         //gl_FragColor = vec4(light_color*light_directional* texture2D(text,v_textCoord).rgb,1);
         gl_FragColor = vec4(light_color*light_pontual* texture2D(text,v_textCoord).rgb,1);

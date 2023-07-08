@@ -352,16 +352,6 @@ function composeRotation(m,ang,eixo){
 
 function draw(){
 
-    
-    var tz =math.matrix([
-        [1,0,0,0],
-        [0,1,0,0],
-        [0,0,1,-5],
-        [0,0,0,1]
-    ])
-
-
-
     //Criar matriz de projeção
     var mproj = createPerspective(30,gl.canvas.width/gl.canvas.height,1,50 )
 
