@@ -8,7 +8,7 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[-0.3,0.5,-0.2]
+var cam_position=[5,5,5]
 var cam_look = [0.0,0.46,-1.7]
 
 
@@ -807,14 +807,19 @@ function configScene(){
                             0         //salto inicial (em bytes)
                             )
     //Adiciona direção a luz
-    //Negativo é entrando positivo é saindo da tela
-    var lightPtr =gl.getUniformLocation(prog,"light_direction")
-    gl.uniform3fv(lightPtr,[-1,-10,-10])
+    //Primeira luz direcional
+    var lightPtr_1 =gl.getUniformLocation(prog,"light_direction_1")
+    gl.uniform3fv(lightPtr_1,[-5,-10,-11])
+
+    //Segunda luz direcional
+    var lightPtr_2 =gl.getUniformLocation(prog,"light_direction_2")
+    gl.uniform3fv(lightPtr_2,[-1,-5,-10])
     
     //Adiciona cor a luz
     var light_color_ptr =gl.getUniformLocation(prog,"light_color")
     gl.uniform3fv(light_color_ptr,[1.0,1.0,1.0])
 
+    //Posiç
     var light_position_ptr =gl.getUniformLocation(prog,"light_position")
     gl.uniform3fv(light_position_ptr,[0.25,1,0.5])
 

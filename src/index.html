@@ -76,7 +76,10 @@
 
     varying vec3 v_normal;
 
-    uniform vec3 light_direction;
+    //Conjunto de luzes direcionais
+    uniform vec3 light_direction_1;
+    uniform vec3 light_direction_2;
+
     uniform vec3 light_color;
 
     varying vec3 pointToLight;
@@ -92,16 +95,24 @@
         vec3 halfVec = normalize(pToCam+pToLight);
 
         vec3 v_normal_n = normalize(v_normal);
-        vec3 light_direction_n = normalize(-light_direction);
+
+        //Normalizando vetores de luz direcional
+        vec3 light_direction_1_n = normalize(-light_direction_1);
+        vec3 light_direction_2_n = normalize(-light_direction_2);
 
 
-        float light_directional =dot(v_normal_n,light_direction_n);
+        float light_directional_1 =dot(v_normal_n,light_direction_1_n);
+        float light_directional_2 =dot(v_normal_n,light_direction_2_n);
+
         float light_pontual =dot(v_normal_n,pToLight);
         float light_especular = dot(v_normal_n, halfVec);
 
         vec3 color_tex;
 
-        if (light_directional<0.0) light_directional=0.0;
+        if (light_directional_1<0.0) light_directional_1=0.0;
+        if (light_directional_2<0.0) light_directional_2=0.0;
+
+
         if (light_pontual<0.0) light_pontual=0.0;
         if (light_especular<0.0) light_especular = 0.0;
 
@@ -112,10 +123,11 @@
         }
 
 
-        //gl_FragColor = vec4(light_color*light_directional* texture2D(text,v_textCoord).rgb,1);
-        //gl_FragColor.rgb =0.2*light_color*color_tex;
-        gl_FragColor.rgb += .6*light_color*light_directional*color_tex;
-        gl_FragColor.rgb += .4*light_color*light_pontual* color_tex;
+        //gl_FragColor = vec4(light_color*light_directional_1* texture2D(text,v_textCoord).rgb,1);
+        gl_FragColor.rgb =  .2*light_color*color_tex;
+        gl_FragColor.rgb += .6*light_color*light_directional_1*color_tex;
+        gl_FragColor.rgb += .3*light_color*light_directional_2*color_tex;
+        gl_FragColor.rgb += .0*light_color*light_pontual* color_tex;
         gl_FragColor.rgb += .0*light_color*pow(light_especular,1000.0)*color_tex;
         gl_FragColor.a =1.0;
     }
