@@ -113,7 +113,7 @@
 
 
         //gl_FragColor = vec4(light_color*light_directional* texture2D(text,v_textCoord).rgb,1);
-        gl_FragColor.rgb =0.2*light_color*color_tex;
+        gl_FragColor.rgb =0.0*light_color*color_tex;
         gl_FragColor.rgb += 0.2*light_color*light_directional*color_tex;
         gl_FragColor.rgb += 0.5*light_color*light_pontual* color_tex;
         gl_FragColor.rgb += light_color*pow(light_especular,1000.0)*color_tex;

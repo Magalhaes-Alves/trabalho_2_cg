@@ -6,7 +6,7 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[0,0,5]
+var cam_position=[0,0.5,5]
 var cam_look = [0,0,-2]
 
 
@@ -526,38 +526,33 @@ document.addEventListener("keydown",(event)=>{
         
         botton = event.key
 
-        if (botton== "ArrowUp"){
-            cam_position[2]=cam_position[2]-0.1
-            console.log(cam_position);
-        }
-
-        if (botton== "ArrowDown"){
-            cam_position[2]=cam_position[2]+0.1
-            console.log(cam_position);
-        }
-
-        if (botton== "ArrowLeft"){
-            //cam_position[0]=cam_position[0]+0.1
-            //console.log(cam_position);
-            angle+=2
-        }
-
-        if (botton== "ArrowRight"){
-            //cam_position[0]=cam_position[0]-0.1
-            //console.log(cam_position);
-            angle-=2
-        }
-
         if (botton== "w"){
-            cam_position[1]=cam_position[1]+0.1
+            cam_position[2]=cam_position[2]-0.1
+            cam_look[2]= cam_look[2]-0.1
             console.log(cam_position);
         }
 
         if (botton== "s"){
-            cam_position[1]=cam_position[1]-0.1
-            console.log(cam_position);
+            cam_position[2]=cam_position[2]+0.1
+            cam_look[2]= cam_look[2]+0.1
+            console.log(cam_position)
+            console.log(cam_look)
         }
 
+        if (botton== "d"){
+            cam_position[0]=cam_position[0]+0.1
+            cam_look[0]=cam_look[0]+0.1
+            console.log(cam_position)
+            console.log(cam_look)
+            
+        }
 
+        if (botton== "a"){
+            cam_position[0]=cam_position[0]-0.1
+            cam_look[0]=cam_look[0]-0.1
+            console.log(cam_position)
+            console.log(cam_look)
+            
+        }
 
     })
