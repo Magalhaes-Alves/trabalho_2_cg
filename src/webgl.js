@@ -1,13 +1,15 @@
 //Array de texturas
 var teximg =[]
-var texSrc =["img/majoras.png","img/ocarina.jpg"]
+var texSrc =["img/madeira_resize.jpg","img/chrono_trigger.jpg",
+            "img/dark souls.jpeg","img/ffvii.jpg","img/hollow_knight.jpeg",
+            "img/mgsv.jpg","img/ocarina_time.jpg",]
 var loadTex =0
 var gl
 var prog
 var angle=0
 
-var cam_position=[-5,2,1]
-var cam_look = [0,0,-2]
+var cam_position=[-1.2,2,-1]
+var cam_look = [-1.2,0,-1.5]
 
 
 function getGL(canvas)
@@ -69,6 +71,42 @@ function init(){
         loadTex++
         loadTextures()
     }
+
+    teximg[2]= new Image()
+    teximg[2].src = texSrc[2]
+    teximg[2].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
+    teximg[3]= new Image()
+    teximg[3].src = texSrc[3]
+    teximg[3].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
+    teximg[4]= new Image()
+    teximg[4].src = texSrc[4]
+    teximg[4].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
+    teximg[5]= new Image()
+    teximg[5].src = texSrc[5]
+    teximg[5].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
+    teximg[6]= new Image()
+    teximg[6].src = texSrc[6]
+    teximg[6].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
         
 function loadTextures(){
     if (loadTex == teximg.length){
@@ -113,7 +151,6 @@ function initGl()
 // Onde é setado os poligonos da cena, configurado as texturas e etc.
 function configScene(){
     //Define coordenadas dos triangulos e suas propriedades (cor ou textura)
-    	
     var coordTriangles = new Float32Array([
                                         //Parede Frente - 0
                                         //    x     y    z   
@@ -139,25 +176,25 @@ function configScene(){
                                             -0.75,  0.90, -1,
 
                                         //Parede esquerda - 2 
-                                            -2,  0.90, -1, 
-                                            -2,   0.0, -1, 
-                                            -0.75,   0.0,  -1, 
-                                            -0.75,  0.90,  -1, 
-                                            -2,  0.90, -1,
+                                               -2,  0.90, -1, 
+                                               -2,   0.0, -1, 
+                                            -0.75,   0.0, -1, 
+                                            -0.75,  0.90, -1, 
+                                               -2,  0.90, -1,
 
                                         //Parede esquerda - 3 
                                             -2,  0.90, -1, 
                                             -2,   0.0, -1, 
-                                            -2,   0.0,  -2, 
-                                            -2,  0.90,  -2, 
+                                            -2,   0.0, -2, 
+                                            -2,  0.90, -2, 
                                             -2,  0.90, -1,
 
                                         // Parede Fundo
-                                            -2,  0.90, -2, 
-                                            -2,   0.0, -2,
+                                               -2,  0.90, -2, 
+                                               -2,   0.0, -2,
                                              0.75,   0.0, -2,
                                              0.75,  0.90, -2,
-                                            -2,  0.90, -2,
+                                               -2,  0.90, -2,
 
                                             
                                         //Parede Direita
@@ -173,10 +210,16 @@ function configScene(){
                                             0.75, 0, -2,
                                            -0.75, 0, -2,
                                            -0.75, 0,  0,
-                                            0.75, 0,  0
+                                            0.75, 0,  0,
 
+                                        //Chão tras
 
-                                        
+                                           -0.75, 0, -1,
+                                           -0.75, 0, -2,
+                                              -2, 0, -2,
+                                              -2, 0, -1,
+                                           -0.75, 0, -1
+                                            
                                             
 
                                         
@@ -190,6 +233,7 @@ function configScene(){
 
                                             ]);
     //Cria buffer na GPU e copia coordenadas para ele
+    
     var bufPtr = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufPtr);
     gl.bufferData(gl.ARRAY_BUFFER, coordTriangles, gl.STATIC_DRAW);
@@ -260,19 +304,25 @@ function configScene(){
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
 
-                                        //Cor chão
+                                        //Cor chão frente
+
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            
+                                        //Cor chao tras
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273
-
     ])
 
     var bufColor = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, bufColor);
     gl.bufferData(gl.ARRAY_BUFFER, vertex_color, gl.STATIC_DRAW);
-
 
     var colorPtr = gl.getAttribLocation(prog,"fcolor")
     gl.enableVertexAttribArray(colorPtr)
@@ -282,18 +332,95 @@ function configScene(){
                             false,
                             3*4,
                             0)
+
+    var texture_coordenate= new Float32Array([
+                                                //  x  y  z
+                                            //Coordenadas Frente
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+
+                                            //Coordenadas Porta
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+
+                                            //Coordenadas parede da Esquerda -1
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                            
+                                            //Coordenadas parede esquerda - 2
+
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+
+                                            //Coordenadas parede esquerda - 3
+
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+
+                                            //Coordenadas Parede Fundo
+
+                                                0, 0,
+                                                0, 0,
+                                                0, 0,
+                                                0, 0,
+                                                0, 0,
+
+                                            // Coordenadas Parede Direita
+
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+
+                                            //Coordenadas Chão frente
+                                                
+                                                0,0,
+                                                1,0,
+                                                1,1,
+                                                0,1,
+                                                0,0,
+
+                                            // Coordenadas chao tras
+
+                                                0,0,
+                                                1,0,
+                                                1,1,
+                                                0,1,
+                                                0,0
+                                                
+                                            ])
     
-    /* var textCoordPtr = gl.getAttribLocation(prog, "texCoord");
+    var buftexture = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, buftexture);
+    gl.bufferData(gl.ARRAY_BUFFER, texture_coordenate, gl.STATIC_DRAW);
+
+    var textCoordPtr = gl.getAttribLocation(prog, "texCoord");
     gl.enableVertexAttribArray(textCoordPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
     gl.vertexAttribPointer(textCoordPtr, 
                             2,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
-                            5*4,      //tamanho do bloco de dados a processar em cada passo
+                            2*4,      //tamanho do bloco de dados a processar em cada passo
                                         //0 indica que o tamanho do bloco Ã© igual a tamanho
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
-                            3*4       //salto inicial (em bytes)
+                            0*4       //salto inicial (em bytes)
                             );
     
     //Carregar textura na gpu
@@ -312,7 +439,7 @@ function configScene(){
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[0])
     
     //Carregando segunda textura
-    var tex1 = gl.createTexture()
+    /* var tex1 = gl.createTexture()
     gl.activeTexture(gl.TEXTURE1)
     gl.bindTexture(gl.TEXTURE_2D,tex1)
 
@@ -321,7 +448,7 @@ function configScene(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1]) */
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])  */
 
     var normals = new Float32Array([
                                     //Normal Parede Frente
@@ -378,13 +505,22 @@ function configScene(){
                                         1, 0, 0,
                                         1, 0, 0,
 
-                                    //Normal Parede de Fundo
+                                    //Normal Chão frente
 
                                         0, 1, 0,
                                         0, 1, 0,
                                         0, 1, 0,
                                         0, 1, 0,
+                                        0, 1, 0,
+
+                                    //Normal Chao Tras
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
                                         0, 1, 0
+                                        
+                                       
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -392,10 +528,10 @@ function configScene(){
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
 
     //Pega ponteiro para o atributo "position" do vertex shader
-    var positionPtr = gl.getAttribLocation(prog, "normal");
-    gl.enableVertexAttribArray(positionPtr);
+    var normalPtr = gl.getAttribLocation(prog, "normal");
+    gl.enableVertexAttribArray(normalPtr);
     //Especifica a cÃ³pia dos valores do buffer para o atributo
-    gl.vertexAttribPointer(positionPtr, 
+    gl.vertexAttribPointer(normalPtr, 
                             3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
@@ -518,7 +654,18 @@ function composeRotation(m,ang,eixo){
     
     return math.multiply(mt,m)
 }
- 
+
+function composeScale(m, sx, sy, sz){
+    m1 = math.matrix([[sx, 0, 0, 0], 
+                    [0, sy, 0, 0],
+                    [0, 0, sz, 0], 
+                    [0, 0, 0, 1]]);
+    return math.multiply(m1,m)
+}
+
+function sleep(mili){
+    return new Promise(resolve=>(setTimeout(resolve,mili)))
+}
 
 function draw(){
 
@@ -530,7 +677,7 @@ function draw(){
     
 
     var transf = createTransformation(4)
-    transf= composeRotation(transf,angle,'y')
+    transf= composeScale(transf,1,1,1)
     
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -551,7 +698,6 @@ function draw(){
     var is_colorPtr = gl.getUniformLocation(prog,"is_color")
     //Indica o slot de textura a ser usado
     var texPtr =gl.getUniformLocation(prog,"text")
-    gl.uniform1i(is_colorPtr,1)
 
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -559,6 +705,7 @@ function draw(){
     //Muda o valor dessa variável
     gl.uniform1i(texPtr,0)
     gl.uniform1i(is_colorPtr,1)
+
     //Desenha parede da frente
     gl.drawArrays(gl.TRIANGLES, 0,3);
     gl.drawArrays(gl.TRIANGLES,2,3);
@@ -587,16 +734,22 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES,30,3)
     gl.drawArrays(gl.TRIANGLES,32,3)
 
-    //Desnha chão frente
+    gl.uniform1i(is_colorPtr,0)
+
+    //Desenha chão frente
     gl.drawArrays(gl.TRIANGLES,35,3)
     gl.drawArrays(gl.TRIANGLES,37,3)
+
+    //Desenha chao tras
+    gl.drawArrays(gl.TRIANGLES,40,3)
+    gl.drawArrays(gl.TRIANGLES,42,3)
+    
 
     
 
     //Desenha placa
  
     
-
     requestAnimationFrame(draw)
 
 
