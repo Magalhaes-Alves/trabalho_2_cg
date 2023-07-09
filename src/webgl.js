@@ -1,15 +1,15 @@
 //Array de texturas
 var teximg =[]
 var texSrc =["img/madeira_resize.jpg","img/chrono_trigger.jpg",
-            "img/dark souls.jpeg","img/ffvii.jpg","img/hollow_knight.jpeg",
+            "img/ffvii.jpg","img/dark souls.jpeg","img/hollow_knight.jpeg",
             "img/mgsv.jpg","img/ocarina_time.jpg",]
 var loadTex =0
 var gl
 var prog
 var angle=0
 
-var cam_position=[-1.2,2,-1]
-var cam_look = [-1.2,0,-1.5]
+var cam_position=[0.3,0.5,-1.5]
+var cam_look = [-1,0.6,-1.7]
 
 
 function getGL(canvas)
@@ -218,9 +218,38 @@ function configScene(){
                                            -0.75, 0, -2,
                                               -2, 0, -2,
                                               -2, 0, -1,
-                                           -0.75, 0, -1
+                                           -0.75, 0, -1,
                                             
-                                            
+                                        
+                                        //Teto
+
+                                            0.75, 0.90, 0,
+                                            0.75, 0.90, -2,
+                                              -2, 0.90, -2,
+                                              -2, 0.90,  0,
+                                            0.75, 0.90, 0,
+
+                                        //Quadro parede esquerda - CHRONO TRIGGER
+                                            -0.749,  0.8, -0.20, 
+                                            -0.749,  0.25, -0.20, 
+                                            -0.749,  0.25, -0.80, 
+                                            -0.749,  0.8,  -0.80, 
+                                            -0.749,  0.8, -0.20,
+
+                                        //Quadro Parede Esquerda 2
+
+                                            -0.95,  0.8, -1.01,
+                                            -0.95, 0.25, -1.01,
+                                            -1.55, 0.25, -1.01,
+                                            -1.55,  0.8, -1.01,
+                                            -0.95,  0.8, -1.01,
+
+                                        //Quadro parede esquerda 3
+                                            -1.99,  0.8, -1.20,
+                                            -1.99, 0.25, -1.20,
+                                            -1.99, 0.25, -1.80,
+                                            -1.99,  0.8, -1.80,
+                                            -1.99,  0.8, -1.20,
 
                                         
                                         //Placa de Titulo -- Textura
@@ -317,7 +346,37 @@ function configScene(){
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273,
                                             0.8671, 0.7187, 0.5273,
-                                            0.8671, 0.7187, 0.5273
+                                            0.8671, 0.7187, 0.5273,
+
+                                        //Cor teto
+                                            1.0,1.0,1.0,
+                                            1.0,1.0,1.0,
+                                            1.0,1.0,1.0,
+                                            1.0,1.0,1.0,
+                                            1.0,1.0,1.0,
+
+                                        //Cor do quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+
+                                        // Cor segundo Quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                        
+                                        // Cor Terceiro Quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                                
+                                            
     ])
 
     var bufColor = gl.createBuffer()
@@ -402,8 +461,39 @@ function configScene(){
                                                 1,0,
                                                 1,1,
                                                 0,1,
-                                                0,0
-                                                
+                                                0,0,
+                                            
+                                            //Textura chão
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                                0,0,
+                                            
+                                            //Coordenada de Textura Quadro 1
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+                                            //Coordenada de Textura Quadro 2
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+                                            //Coordenada de Textura Quadro 3
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+
                                             ])
     
     var buftexture = gl.createBuffer()
@@ -439,7 +529,7 @@ function configScene(){
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[0])
     
     //Carregando segunda textura
-    /* var tex1 = gl.createTexture()
+    var tex1 = gl.createTexture()
     gl.activeTexture(gl.TEXTURE1)
     gl.bindTexture(gl.TEXTURE_2D,tex1)
 
@@ -448,7 +538,63 @@ function configScene(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])  */
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1])
+
+    var tex2 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE2)
+    gl.bindTexture(gl.TEXTURE_2D,tex2)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[2])
+
+    var tex3 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE3)
+    gl.bindTexture(gl.TEXTURE_2D,tex3)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[3])
+
+    var tex4 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE4)
+    gl.bindTexture(gl.TEXTURE_2D,tex4)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[4])
+
+    var tex5 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE5)
+    gl.bindTexture(gl.TEXTURE_2D,tex5)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[5])
+
+    var tex6 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE6)
+    gl.bindTexture(gl.TEXTURE_2D,tex6)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[6])
+
 
     var normals = new Float32Array([
                                     //Normal Parede Frente
@@ -473,7 +619,7 @@ function configScene(){
                                         1, 0, 0,
                                         1, 0, 0,
                                     
-                                    //Normal parede esquerda - 2
+                                    //Normal parede esquerda - 2 Erro Iluminacao
 
                                         0, 0, 1,
                                         0, 0, 1,
@@ -489,13 +635,13 @@ function configScene(){
                                         1, 0, 0,
                                         1, 0, 0,
 
-                                    //Normal Fundo
+                                    //Normal Fundo - Erro Iluminação
 
-                                        0, 0, -1,
-                                        0, 0, -1,
-                                        0, 0, -1,
-                                        0, 0, -1,
-                                        0, 0, -1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
 
                                     // Normal Parede Direita
 
@@ -518,9 +664,39 @@ function configScene(){
                                         0, 1, 0,
                                         0, 1, 0,
                                         0, 1, 0,
-                                        0, 1, 0
-                                        
-                                       
+                                        0, 1, 0,
+                                    
+                                    //Normal teto
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+
+                                    // Normal Quadro 1
+
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+
+
+                                    // Normal Quadro 2 - Negativo
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 3,
+
+                                    // Normal Quadro 3 - 
+
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -543,7 +719,7 @@ function configScene(){
     //Adiciona direção a luz
     //Negativo é entrando positivo é saindo da tela
     var lightPtr =gl.getUniformLocation(prog,"light_direction")
-    gl.uniform3fv(lightPtr,[-0.2,-1,-0.7])
+    gl.uniform3fv(lightPtr,[-1,-10,-10])
     
     //Adiciona cor a luz
     var light_color_ptr =gl.getUniformLocation(prog,"light_color")
@@ -743,7 +919,34 @@ function draw(){
     //Desenha chao tras
     gl.drawArrays(gl.TRIANGLES,40,3)
     gl.drawArrays(gl.TRIANGLES,42,3)
+
+    gl.uniform1i(is_colorPtr,1)
     
+    //Desenha teto
+    gl.drawArrays(gl.TRIANGLES,45,3)
+    gl.drawArrays(gl.TRIANGLES,47,3)
+
+    //Desenha primeiro quadro - Chrono Trigger
+
+    gl.uniform1i(is_colorPtr,0)
+    gl.uniform1i(texPtr,1)
+
+    gl.drawArrays(gl.TRIANGLES,50,3)
+    gl.drawArrays(gl.TRIANGLES,52,3)
+
+    //Desenha segundo quadro - Final Fantasy
+    gl.uniform1i(texPtr,2)
+
+    gl.drawArrays(gl.TRIANGLES,55,3)
+    gl.drawArrays(gl.TRIANGLES,57,3)
+
+    gl.uniform1i(texPtr,3)
+
+    gl.drawArrays(gl.TRIANGLES,60,3)
+    gl.drawArrays(gl.TRIANGLES,62,3)
+
+
+
 
     
 
