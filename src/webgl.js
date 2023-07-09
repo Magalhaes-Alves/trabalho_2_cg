@@ -6,8 +6,8 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[5,4.5,5]
-var cam_look = [0.0,0.0,0.0]
+var cam_position=[0,0,5]
+var cam_look = [0,0,-2]
 
 
 function getGL(canvas)
@@ -116,35 +116,43 @@ function configScene(){
     	
     var coordTriangles = new Float32Array([
                                         //Parede Frente - 0
-                                        //    x     y    z    r    g    b
-                                            -0.5,  0.75, 0.0, 1.0, 1.0, 0.0, 
-                                            -0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
-                                             0.5,   0.0, 0.0, 1.0, 1.0, 0.0,
-                                             0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
-                                            -0.5,  0.75, 0.0, 1.0, 1.0, 0.0,
+                                        //    x     y    z   
+                                            -0.5,  0.75, 0.0,  
+                                            -0.5,   0.0, 0.0, 
+                                             0.5,   0.0, 0.0, 
+                                             0.5,  0.75, 0.0, 
+                                            -0.5,  0.75, 0.0, 
                                         
                                         //Porta - 5
-                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
-                                            -0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
-                                             0.25,   0.0, 0.01, 0.585, 0.2929, 0.0,
-                                             0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
-                                            -0.25,  0.45, 0.01, 0.585, 0.2929, 0.0,
+                                            -0.25,  0.45, 0.01, 
+                                            -0.25,   0.0, 0.01, 
+                                             0.25,   0.0, 0.01, 
+                                             0.25,  0.45, 0.01, 
+                                            -0.25,  0.45, 0.01, 
 
 
                                         // Parede Lateral Fundo -15
-                                        -0.5,  0.75, -0.8, 1.0, 1.0, 0.0, 
-                                        -0.5,   0.0, -0.8, 1.0, 1.0, 0.0,
-                                         0.5,   0.0, -0.8, 1.0, 1.0, 0.0,
-                                         0.5,  0.75, -0.8, 1.0, 1.0, 0.0,
-                                        -0.5,  0.75, -0.8, 1.0, 1.0, 0.0,
+                                             -0.5,  0.75, -1, 
+                                             -0.5,   0.0, -1,
+                                              0.5,   0.0, -1,
+                                              0.5,  0.75, -1,
+                                             -0.5,  0.75, -1,
                                         
                                         //Parede Lateral Esquerda -10
 
-                                            -0.5,  0.75, -1, 1.0, 1.0, 0.0, 
-                                            -0.5,   0.0, -1, 1.0, 1.0, 0.0,
-                                            -0.5,   0.0,  0.0, 1.0, 1.0, 0.0,
-                                            -0.5,  0.75,  0.0, 1.0, 1.0, 0.0,
-                                            -0.5,  0.75,  -1, 1.0, 1.0, 0.0,
+                                            -0.5,  0.75, -1, 
+                                            -0.5,   0.0, -1, 
+                                            -0.5,   0.0,  0, 
+                                            -0.5,  0.75,  0, 
+                                            -0.5,  0.75, -1,
+                                            
+                                        //Parede Direita
+                                            0.5, 0.75,  0,
+                                            0.5,  0.0,  0,
+                                            0.5,  0.0, -1,
+                                            0.5, 0.75, -1,
+                                            0.5, 0.75,  0
+
 
                                         
                                             
@@ -159,7 +167,6 @@ function configScene(){
                                             -0.40, 0.68, 0.01, 1.0, 1.0, 1.0 */
 
                                             ]);
-    console.log(coordTriangles.length/6);                                            
     //Cria buffer na GPU e copia coordenadas para ele
     var bufPtr = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufPtr);
@@ -173,15 +180,56 @@ function configScene(){
                             3,        //quantidade de dados em cada processamento
                             gl.FLOAT, //tipo de cada dado (tamanho)
                             false,    //nÃ£o normalizar
-                            6*4,      //tamanho do bloco de dados a processar em cada passo
+                            3*4,      //tamanho do bloco de dados a processar em cada passo
                                         //0 indica que o tamanho do bloco Ã© igual a tamanho
                                         //lido (2 floats, ou seja, 2*4 bytes = 8 bytes)
                             0         //salto inicial (em bytes)
                             );
 
+    var vertex_color = new Float32Array([
+                                        //Cor primeira parede
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+
+                                        //Cor da porta
+                                            0.585, 0.2929, 0.0,
+                                            0.585, 0.2929, 0.0,
+                                            0.585, 0.2929, 0.0,
+                                            0.585, 0.2929, 0.0,
+                                            0.585, 0.2929, 0.0,
+
+                                        //Cor parede da esquerda
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+
+                                        //Cor parede fundo
+
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+
+                                        //Cor parede fundo
+
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0
+
+    ])
+
     var bufColor = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, bufColor);
-    gl.bufferData(gl.ARRAY_BUFFER, coordTriangles, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, vertex_color, gl.STATIC_DRAW);
+
 
     var colorPtr = gl.getAttribLocation(prog,"fcolor")
     gl.enableVertexAttribArray(colorPtr)
@@ -189,9 +237,8 @@ function configScene(){
                             3,
                             gl.FLOAT,
                             false,
-                            6*4,
-                            3*4
-                            )
+                            3*4,
+                            0)
     
     /* var textCoordPtr = gl.getAttribLocation(prog, "texCoord");
     gl.enableVertexAttribArray(textCoordPtr);
@@ -254,6 +301,22 @@ function configScene(){
                                         0, 1, 0,
                                         0, 1, 0,
                                         0, 1, 0,
+                                    
+                                    //Normal parede esquerda
+
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+
+                                    // Normal Parede Direita
+
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0,
+                                        1, 0, 0
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -440,9 +503,14 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES, 10,3);
     gl.drawArrays(gl.TRIANGLES, 12,3);
 
-
+    //Desenha a parede do Fundo
     gl.drawArrays(gl.TRIANGLES,15,3)
     gl.drawArrays(gl.TRIANGLES,17,3)
+
+    //Desenha a parede da direita
+    gl.drawArrays(gl.TRIANGLES,20,3)
+    gl.drawArrays(gl.TRIANGLES,22,3)
+    
 
     //Desenha placa
  
