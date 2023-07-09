@@ -8,8 +8,8 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[0.3,0.5,-1.5]
-var cam_look = [-1,0.6,-1.7]
+var cam_position=[-0.3,0.5,-0.2]
+var cam_look = [0.0,0.46,-1.7]
 
 
 function getGL(canvas)
@@ -236,7 +236,7 @@ function configScene(){
                                             -0.749,  0.8,  -0.80, 
                                             -0.749,  0.8, -0.20,
 
-                                        //Quadro Parede Esquerda 2
+                                        //Quadro Parede Esquerda 2 - FF VII
 
                                             -0.95,  0.8, -1.01,
                                             -0.95, 0.25, -1.01,
@@ -244,14 +244,35 @@ function configScene(){
                                             -1.55,  0.8, -1.01,
                                             -0.95,  0.8, -1.01,
 
-                                        //Quadro parede esquerda 3
+                                        //Quadro parede esquerda 3 - Dark Souls
                                             -1.99,  0.8, -1.20,
                                             -1.99, 0.25, -1.20,
                                             -1.99, 0.25, -1.80,
                                             -1.99,  0.8, -1.80,
                                             -1.99,  0.8, -1.20,
 
-                                        
+                                        //Quadro parede Fundo 4 - Hollow Knight
+                                            -1.80,  0.8, -1.99,
+                                            -1.80, 0.25, -1.99,
+                                            -1.20, 0.25, -1.99,
+                                            -1.20,  0.8, -1.99,
+                                            -1.80,  0.8, -1.99,
+
+
+                                        //Quadro parede Fundo 5
+                                            -1.0,  0.8, -1.99,
+                                            -1.0, 0.25, -1.99,
+                                            -0.40, 0.25, -1.99,
+                                            -0.40,  0.8, -1.99,
+                                            -1.0,  0.8, -1.99,
+
+                                        //Quadro parede Fundo 6
+                                            -0.20,  0.8, -1.99,
+                                            -0.20, 0.25, -1.99,
+                                             0.60, 0.25, -1.99,
+                                             0.60,  0.8, -1.99,
+                                            -0.20,  0.8, -1.99,
+                                            
                                         //Placa de Titulo -- Textura
 
                                             /* -0.40, 0.68, 0.01, 1.0, 1.0, 1.0,
@@ -375,6 +396,27 @@ function configScene(){
                                             0,0,0,
                                             0,0,0,
                                             0,0,0,
+
+                                        // Cor Quarto Quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+
+                                        // Cor Quinto Quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+
+                                        // Cor Quinto Quadro
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
+                                            0,0,0,
                                                 
                                             
     ])
@@ -486,6 +528,30 @@ function configScene(){
                                                 0,0,
 
                                             //Coordenada de Textura Quadro 3
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+                                            
+                                            //Coordenada de Textura Quadro 4
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+                                            //Coordenada de Textura Quadro 5
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+                                            //Coordenada de Textura Quadro 5
 
                                                 0,0,
                                                 0,1,
@@ -690,13 +756,37 @@ function configScene(){
                                         0, 0, 1,
                                         0, 0, 3,
 
-                                    // Normal Quadro 3 - 
+                                    // Normal Quadro 3 - Dark souls
 
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
-                                        1, 0, 0
+                                        1, 0, 0,
+
+                                    // Normal Quadro 4 - Hollow Knight
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    // Normal Quadro 5 - MGS
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    // Normal Quadro 6 - 
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -940,11 +1030,31 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES,55,3)
     gl.drawArrays(gl.TRIANGLES,57,3)
 
+
+    //Desenha terceiro Quadro - Dark Souls 1
     gl.uniform1i(texPtr,3)
 
     gl.drawArrays(gl.TRIANGLES,60,3)
     gl.drawArrays(gl.TRIANGLES,62,3)
 
+    //Desenha quadro 4 - Hollow Knight 
+
+    gl.uniform1i(texPtr,4)
+
+    gl.drawArrays(gl.TRIANGLES,65,3)
+    gl.drawArrays(gl.TRIANGLES,67,3)
+
+    //Desenha quadro 5
+    gl.uniform1i(texPtr,5)
+
+    gl.drawArrays(gl.TRIANGLES,70,3)
+    gl.drawArrays(gl.TRIANGLES,72,3)
+
+    //Desenha quadro 6
+    gl.uniform1i(texPtr,6)
+
+    gl.drawArrays(gl.TRIANGLES,75,3)
+    gl.drawArrays(gl.TRIANGLES,77,3)
 
 
 
