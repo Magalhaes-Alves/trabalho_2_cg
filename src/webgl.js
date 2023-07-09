@@ -6,7 +6,7 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[0,0.5,5]
+var cam_position=[-5,2,1]
 var cam_look = [0,0,-2]
 
 
@@ -117,11 +117,11 @@ function configScene(){
     var coordTriangles = new Float32Array([
                                         //Parede Frente - 0
                                         //    x     y    z   
-                                            -0.5,  0.75, 0.0,  
-                                            -0.5,   0.0, 0.0, 
-                                             0.5,   0.0, 0.0, 
-                                             0.5,  0.75, 0.0, 
-                                            -0.5,  0.75, 0.0, 
+                                            -0.75,  0.90, 0.0,  
+                                            -0.75,   0.0, 0.0, 
+                                             0.75,   0.0, 0.0, 
+                                             0.75,  0.90, 0.0, 
+                                            -0.75,  0.90, 0.0, 
                                         
                                         //Porta - 5
                                             -0.25,  0.45, 0.01, 
@@ -129,29 +129,51 @@ function configScene(){
                                              0.25,   0.0, 0.01, 
                                              0.25,  0.45, 0.01, 
                                             -0.25,  0.45, 0.01, 
-
-
-                                        // Parede Lateral Fundo -15
-                                             -0.5,  0.75, -1, 
-                                             -0.5,   0.0, -1,
-                                              0.5,   0.0, -1,
-                                              0.5,  0.75, -1,
-                                             -0.5,  0.75, -1,
                                         
-                                        //Parede Lateral Esquerda -10
+                                        //Parede Esquerda - 1
 
-                                            -0.5,  0.75, -1, 
-                                            -0.5,   0.0, -1, 
-                                            -0.5,   0.0,  0, 
-                                            -0.5,  0.75,  0, 
-                                            -0.5,  0.75, -1,
+                                            -0.75,  0.90, -1, 
+                                            -0.75,   0.0, -1, 
+                                            -0.75,   0.0,  0, 
+                                            -0.75,  0.90,  0, 
+                                            -0.75,  0.90, -1,
+
+                                        //Parede esquerda - 2 
+                                            -2,  0.90, -1, 
+                                            -2,   0.0, -1, 
+                                            -0.75,   0.0,  -1, 
+                                            -0.75,  0.90,  -1, 
+                                            -2,  0.90, -1,
+
+                                        //Parede esquerda - 3 
+                                            -2,  0.90, -1, 
+                                            -2,   0.0, -1, 
+                                            -2,   0.0,  -2, 
+                                            -2,  0.90,  -2, 
+                                            -2,  0.90, -1,
+
+                                        // Parede Fundo
+                                            -2,  0.90, -2, 
+                                            -2,   0.0, -2,
+                                             0.75,   0.0, -2,
+                                             0.75,  0.90, -2,
+                                            -2,  0.90, -2,
+
                                             
                                         //Parede Direita
-                                            0.5, 0.75,  0,
-                                            0.5,  0.0,  0,
-                                            0.5,  0.0, -1,
-                                            0.5, 0.75, -1,
-                                            0.5, 0.75,  0
+                                            0.75, 0.90,  0,
+                                            0.75,  0.0,  0,
+                                            0.75,  0.0, -2,
+                                            0.75, 0.90, -2,
+                                            0.75, 0.90,  0,
+
+                                        //Chão Frente
+
+                                            0.75, 0,  0,
+                                            0.75, 0, -2,
+                                           -0.75, 0, -2,
+                                           -0.75, 0,  0,
+                                            0.75, 0,  0
 
 
                                         
@@ -201,7 +223,21 @@ function configScene(){
                                             0.585, 0.2929, 0.0,
                                             0.585, 0.2929, 0.0,
 
-                                        //Cor parede da esquerda
+                                        //Cor parede da esquerda - 1
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                        
+                                        //Cor Parede esquerda - 2
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+                                            1.0, 1.0, 0.0,
+
+                                        //Cor Parede esquerda - 3
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
@@ -216,13 +252,20 @@ function configScene(){
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
 
-                                        //Cor parede fundo
+                                        //Cor parede Direita
 
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
                                             1.0, 1.0, 0.0,
-                                            1.0, 1.0, 0.0
+                                            1.0, 1.0, 0.0,
+
+                                        //Cor chão
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273,
+                                            0.8671, 0.7187, 0.5273
 
     ])
 
@@ -281,7 +324,7 @@ function configScene(){
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[1]) */
 
     var normals = new Float32Array([
-                                    //Normal primeiro Quadrado
+                                    //Normal Parede Frente
                                     //  x  y  z
                                         0, 0, 1,
                                         0, 0, 1,
@@ -289,26 +332,43 @@ function configScene(){
                                         0, 0, 1,
                                         0, 0, 1,
 
-                                    //Normal segundo quadrado
+                                    //Normal Porta
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    //Normal parede da Esquerda -1
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
-                                    //Normal terceiro Quadrado
-                                        0, 1, 0,
-                                        0, 1, 0,
-                                        0, 1, 0,
-                                        0, 1, 0,
-                                        0, 1, 0,
                                     
-                                    //Normal parede esquerda
+                                    //Normal parede esquerda - 2
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    //Normal parede esquerda - 3
 
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
+
+                                    //Normal Fundo
+
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
 
                                     // Normal Parede Direita
 
@@ -316,7 +376,15 @@ function configScene(){
                                         1, 0, 0,
                                         1, 0, 0,
                                         1, 0, 0,
-                                        1, 0, 0
+                                        1, 0, 0,
+
+                                    //Normal Parede de Fundo
+
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0,
+                                        0, 1, 0
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -499,17 +567,30 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES, 5,3);
     gl.drawArrays(gl.TRIANGLES,7,3);
 
-    //Desenhar parede esquerda
+    //Desenhar parede esquerda - 1
     gl.drawArrays(gl.TRIANGLES, 10,3);
     gl.drawArrays(gl.TRIANGLES, 12,3);
 
-    //Desenha a parede do Fundo
-    gl.drawArrays(gl.TRIANGLES,15,3)
-    gl.drawArrays(gl.TRIANGLES,17,3)
+    // Desenha a parede da esquerda - 2
+    gl.drawArrays(gl.TRIANGLES, 15,3);
+    gl.drawArrays(gl.TRIANGLES, 17,3);
 
-    //Desenha a parede da direita
+    //Desenha a parede da esquerda 3
     gl.drawArrays(gl.TRIANGLES,20,3)
     gl.drawArrays(gl.TRIANGLES,22,3)
+
+    //Desenha o fundo
+    gl.drawArrays(gl.TRIANGLES,25,3)
+    gl.drawArrays(gl.TRIANGLES,27,3)
+
+    //Desenha parede da Direita
+    gl.drawArrays(gl.TRIANGLES,30,3)
+    gl.drawArrays(gl.TRIANGLES,32,3)
+
+    //Desnha chão frente
+    gl.drawArrays(gl.TRIANGLES,35,3)
+    gl.drawArrays(gl.TRIANGLES,37,3)
+
     
 
     //Desenha placa
@@ -550,6 +631,32 @@ document.addEventListener("keydown",(event)=>{
         if (botton== "a"){
             cam_position[0]=cam_position[0]-0.1
             cam_look[0]=cam_look[0]-0.1
+            console.log(cam_position)
+            console.log(cam_look)
+            
+        }
+
+        if (botton=="ArrowUp"){
+            cam_look[1]=cam_look[1]+0.1
+            cam_look[2] =cam_look[1]-0.1
+            console.log(cam_position)
+            console.log(cam_look)
+        }
+
+        if (botton=="ArrowDown"){
+            cam_look[1]=cam_look[1]-0.1
+            cam_look[2] =cam_look[1]+0.1
+            console.log(cam_position)
+            console.log(cam_look)
+        }
+        if (botton=="ArrowLeft"){
+            cam_look[0]=cam_look[0]-0.1
+            console.log(cam_position)
+            console.log(cam_look)
+            
+        }
+        if (botton=="ArrowRight"){
+            cam_look[0]=cam_look[0]+0.1
             console.log(cam_position)
             console.log(cam_look)
             
