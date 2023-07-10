@@ -38,8 +38,15 @@
     attribute vec3 normal;
     varying vec3 v_normal;
 
-    uniform vec3 light_position;
-    varying vec3 pointToLight;
+    uniform vec3 light_position_1;
+    uniform vec3 light_position_2;
+    uniform vec3 light_position_3;
+    uniform vec3 light_position_4;
+    
+    varying vec3 pointToLight_1;
+    varying vec3 pointToLight_2;
+    varying vec3 pointToLight_3;
+    varying vec3 pointToLight_4;
 
     uniform vec3 cam_pos;
     varying vec3 pointToCam;
@@ -55,10 +62,13 @@
 
         v_normal = (transf*vec4(normal,1.0)).xyz;
 
-        pointToLight = light_position - position.xyz;
-
+        
         pointToCam = cam_pos - position.xyz;
-
+        
+        pointToLight_1 = light_position_1 - position.xyz;
+        pointToLight_2 = light_position_2 - position.xyz;
+        pointToLight_3 = light_position_3 - position.xyz;
+        pointToLight_4 = light_position_4 - position.xyz;
         
     }
 
@@ -82,17 +92,26 @@
 
     uniform vec3 light_color;
 
-    varying vec3 pointToLight;
+    varying vec3 pointToLight_1;
+    varying vec3 pointToLight_2;
+    varying vec3 pointToLight_3;
+    varying vec3 pointToLight_4;
+
     varying vec3 pointToCam;
 
     uniform int is_color;
 
     void main(){
+        //Vetor de pontos da luz
+        vec3 pToLight_1 = normalize(pointToLight_1);
+        vec3 pToLight_2 = normalize(pointToLight_2);
+        vec3 pToLight_3 = normalize(pointToLight_3);
+        vec3 pToLight_4 = normalize(pointToLight_4);
         
-        vec3 pToLight = normalize(pointToLight);
+
         vec3 pToCam = normalize(pointToCam);
         
-        vec3 halfVec = normalize(pToCam+pToLight);
+        vec3 halfVec = normalize(pToCam+pToLight_1);
 
         vec3 v_normal_n = normalize(v_normal);
 
@@ -104,7 +123,11 @@
         float light_directional_1 =dot(v_normal_n,light_direction_1_n);
         float light_directional_2 =dot(v_normal_n,light_direction_2_n);
 
-        float light_pontual =dot(v_normal_n,pToLight);
+        float light_pontual_1 =dot(v_normal_n,pToLight_1);
+        float light_pontual_2 =dot(v_normal_n,pToLight_2);
+        float light_pontual_3 =dot(v_normal_n,pToLight_3);
+        float light_pontual_4 =dot(v_normal_n,pToLight_4);
+
         float light_especular = dot(v_normal_n, halfVec);
 
         vec3 color_tex;
@@ -113,7 +136,11 @@
         if (light_directional_2<0.0) light_directional_2=0.0;
 
 
-        if (light_pontual<0.0) light_pontual=0.0;
+        if (light_pontual_1<0.0) light_pontual_1=0.0;
+        if (light_pontual_2<0.0) light_pontual_2=0.0;
+        if (light_pontual_3<0.0) light_pontual_3=0.0;
+        if (light_pontual_4<0.0) light_pontual_4=0.0;
+
         if (light_especular<0.0) light_especular = 0.0;
 
         if (is_color ==1){
@@ -122,12 +149,20 @@
             color_tex = texture2D(text,v_textCoord).rgb;
         }
 
+        //Luz Ambiente
+        gl_FragColor.rgb =  .09*light_color*color_tex;
 
-        //gl_FragColor = vec4(light_color*light_directional_1* texture2D(text,v_textCoord).rgb,1);
-        gl_FragColor.rgb =  .2*light_color*color_tex;
-        gl_FragColor.rgb += .6*light_color*light_directional_1*color_tex;
+        // Luz direcional
+        gl_FragColor.rgb += .3*light_color*light_directional_1*color_tex;
         gl_FragColor.rgb += .3*light_color*light_directional_2*color_tex;
-        gl_FragColor.rgb += .0*light_color*light_pontual* color_tex;
+
+        //Luz pontual
+        gl_FragColor.rgb += .8*light_color*light_pontual_1* color_tex;
+        gl_FragColor.rgb += .8*light_color*light_pontual_2* color_tex;
+        gl_FragColor.rgb += .0*light_color*light_pontual_3* color_tex;
+        gl_FragColor.rgb += .0*light_color*light_pontual_4* color_tex;
+
+
         gl_FragColor.rgb += .0*light_color*pow(light_especular,1000.0)*color_tex;
         gl_FragColor.a =1.0;
     }

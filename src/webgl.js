@@ -8,8 +8,8 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[5,5,5]
-var cam_look = [0.0,0.46,-1.7]
+var cam_position=[- 0.19999999999999998, 0.5,-2.1]
+var cam_look = [10,0.46,10]
 
 
 function getGL(canvas)
@@ -176,11 +176,12 @@ function configScene(){
                                             -0.75,  0.90, -1,
 
                                         //Parede esquerda - 2 
-                                               -2,  0.90, -1, 
-                                               -2,   0.0, -1, 
-                                            -0.75,   0.0, -1, 
-                                            -0.75,  0.90, -1, 
-                                               -2,  0.90, -1,
+
+                                            -0.75, 0.90,-1,
+                                            -0.75, 0.0, -1,
+                                            -2, 0.0, -1,
+                                            -2, 0.90,-1,
+                                            -0.75, 0.90,-1,
 
                                         //Parede esquerda - 3 
                                             -2,  0.90, -1, 
@@ -687,11 +688,11 @@ function configScene(){
                                     
                                     //Normal parede esquerda - 2 Erro Iluminacao
 
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
 
                                     //Normal parede esquerda - 3
 
@@ -750,11 +751,11 @@ function configScene(){
 
                                     // Normal Quadro 2 - Negativo
 
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 1,
-                                        0, 0, 3,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
+                                        0, 0, -1,
 
                                     // Normal Quadro 3 - Dark souls
 
@@ -819,9 +820,19 @@ function configScene(){
     var light_color_ptr =gl.getUniformLocation(prog,"light_color")
     gl.uniform3fv(light_color_ptr,[1.0,1.0,1.0])
 
-    //Posiç
-    var light_position_ptr =gl.getUniformLocation(prog,"light_position")
-    gl.uniform3fv(light_position_ptr,[0.25,1,0.5])
+    //Posição luz
+    var light_position_1_ptr =gl.getUniformLocation(prog,"light_position_1")
+    gl.uniform3fv(light_position_1_ptr,[-0.57,0.50,-0.5])
+
+    var light_position_2_ptr =gl.getUniformLocation(prog,"light_position_2")
+    gl.uniform3fv(light_position_2_ptr,[-1.3,0.5,-1.2])
+
+    var light_position_3_ptr =gl.getUniformLocation(prog,"light_position_3")
+    gl.uniform3fv(light_position_3_ptr,[0.25,1,0.5])
+
+    var light_position_4_ptr =gl.getUniformLocation(prog,"light_position_4")
+    gl.uniform3fv(light_position_4_ptr,[0.25,1,0.5])
+
 
     var cam_position_ptr =gl.getUniformLocation(prog,"cam_pos")
     gl.uniform3fv(cam_position_ptr,cam_position)
