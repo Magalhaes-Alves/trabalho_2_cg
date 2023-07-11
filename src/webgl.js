@@ -8,8 +8,22 @@ var gl
 var prog
 var angle=0
 
-var cam_position=[- 0.19999999999999998, 0.5,-2.1]
-var cam_look = [10,0.46,10]
+var cam_position=[0, 0.,5]
+var cam_look =[0.1,0.1,0.1]
+var up =  [cam_position[0],cam_position[1]+1,cam_position[2]]
+
+var deslocamentoX=0
+var deslocamentoY=0
+var deslocamentoZ=0
+
+var rotacaoH =0
+var rotacaoV =0
+
+var fator_deslocamento =0.3
+
+var rotation_left_Light=0
+var rotation_right_light=0
+    
 
 
 function getGL(canvas)
@@ -828,10 +842,10 @@ function configScene(){
     gl.uniform3fv(light_position_2_ptr,[-1.3,0.5,-1.2])
 
     var light_position_3_ptr =gl.getUniformLocation(prog,"light_position_3")
-    gl.uniform3fv(light_position_3_ptr,[0.25,1,0.5])
+    gl.uniform3fv(light_position_3_ptr,[-0.40,0.1,0.1])
 
     var light_position_4_ptr =gl.getUniformLocation(prog,"light_position_4")
-    gl.uniform3fv(light_position_4_ptr,[0.25,1,0.5])
+    gl.uniform3fv(light_position_4_ptr,[0.40,0.1,0.1])
 
 
     var cam_position_ptr =gl.getUniformLocation(prog,"cam_pos")
@@ -908,11 +922,12 @@ function composeTranslation(m, tx, ty, tz){
 
 function composeRotation(m,ang,eixo){
 
-    var mt
+    var m =math.matrix(m)
+
     ang = ang* Math.PI/180
 
     if (eixo == 'x'){
-        mt =math.matrix([
+        var mt =math.matrix([
             [1, 0, 0, 0],
             [0, Math.cos(ang), -Math.sin(ang), 0],
             [0, Math.sin(ang),  Math.cos(ang), 0], 
@@ -920,14 +935,14 @@ function composeRotation(m,ang,eixo){
         )
 
     }else if (eixo =='y'){
-        mt =math.matrix([
+        var mt =math.matrix([
             [Math.cos(ang), 0, -Math.sin(ang), 0],
             [0, 1, 0, 0],
             [Math.sin(ang), 0,  Math.cos(ang), 0],
             [0, 0, 0, 1]])
 
     }else if( eixo=='z'){
-        mt =math.matrix([
+        var mt =math.matrix([
             [Math.cos(ang), -Math.sin(ang), 0, 0],
             [Math.sin(ang),  Math.cos(ang), 0, 0],
             [0, 0, 1, 0],
@@ -955,7 +970,7 @@ function draw(){
     var mproj = createPerspective(30,gl.canvas.width/gl.canvas.height,1,50 )
 
     /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
-    var cam = createCamera(cam_position,cam_look,[cam_position[0],cam_position[1]+1,cam_position[2]])
+    var cam = createCamera(cam_position,cam_look,up)
     
 
     var transf = createTransformation(4)
@@ -980,6 +995,28 @@ function draw(){
     var is_colorPtr = gl.getUniformLocation(prog,"is_color")
     //Indica o slot de textura a ser usado
     var texPtr =gl.getUniformLocation(prog,"text")
+
+
+    //Animação luzes ----------------------------------------------------
+    left_light_front = math.matrix([-0.40,0.1,0.1])
+    right_light_front= math.matrix([0.40,0.1,0.1])
+
+    var luz_t = createTransformation(4)
+    luz_t= composeRotation(luz_t,rotation_left_Light++,'z')
+
+    luz_t_left = math.multiply(luz_t,math.transpose(math.concat(left_light_front,[1])))
+    luz_t_left = luz_t_left._data.slice(0,3)
+
+    var light_position_3_ptr =gl.getUniformLocation(prog,"light_position_3")
+    gl.uniform3fv(light_position_3_ptr,luz_t_left)
+
+    luz_t = createTransformation(4)
+    luz_t= composeRotation(luz_t,rotation_right_light++,'z')
+
+    var luz_t_right = math.multiply(luz_t,math.transpose(math.concat(right_light_front,[1])))
+    luz_t_right = luz_t_right._data.slice(0,3)
+    var light_position_4_ptr =gl.getUniformLocation(prog,"light_position_4")
+    gl.uniform3fv(light_position_4_ptr,luz_t_right)
 
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1082,17 +1119,20 @@ function draw(){
     requestAnimationFrame(draw)
 
 
-    
+
 }
 
 document.addEventListener("keydown",(event)=>{
         
         botton = event.key
 
+        var matrix_t = createTransformation(4)
+
         if (botton== "w"){
-            cam_position[2]=cam_position[2]-0.1
-            cam_look[2]= cam_look[2]-0.1
-            console.log(cam_position);
+            
+            if ( rotacaoH>= 0 && rotacaoH<90   ){
+                deslocamentoX-=fator_deslocamento
+            }
         }
 
         if (botton== "s"){
@@ -1119,29 +1159,23 @@ document.addEventListener("keydown",(event)=>{
         }
 
         if (botton=="ArrowUp"){
-            cam_look[1]=cam_look[1]+0.1
-            cam_look[2] =cam_look[1]-0.1
-            console.log(cam_position)
-            console.log(cam_look)
+            rotacaoV+=1
+            mt = composeRotation(matrix_t,rotacaoV,'x')
+            var mf= math.multiply([cam_look[0],cam_look[1],cam_look[2],1],mt)
+            
+            
         }
 
-        if (botton=="ArrowDown"){
-            cam_look[1]=cam_look[1]-0.1
-            cam_look[2] =cam_look[1]+0.1
-            console.log(cam_position)
-            console.log(cam_look)
-        }
-        if (botton=="ArrowLeft"){
-            cam_look[0]=cam_look[0]-0.1
-            console.log(cam_position)
-            console.log(cam_look)
-            
-        }
         if (botton=="ArrowRight"){
-            cam_look[0]=cam_look[0]+0.1
-            console.log(cam_position)
-            console.log(cam_look)
+            rotacaoH=5
+            var mt = composeRotation(matrix_t,rotacaoH,'y')
+            var cam_look_1 = math.concat(cam_look,[1])
+            mt = math.multiply(math.transpose(cam_look_1),mt)
+            mt = mt._data
+            console.log(mt);
+            cam_look= [mt[0],mt[1],mt[2]]
             
         }
+            
 
     })
