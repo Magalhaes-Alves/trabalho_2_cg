@@ -1170,12 +1170,13 @@ document.addEventListener("keydown",(event)=>{
 
         if (botton=="ArrowRight"){
             rotacaoH=5
+            
             var mt = composeRotation(matrix_t,rotacaoH,'y')
             var cam_look_1 = math.concat(cam_look,[1])
-            mt = math.multiply(math.transpose(cam_look_1),mt)
-            mt = mt._data
+            mt = math.multiply(mt,math.transpose(cam_look_1))
+            mt = mt._data.slice(0,3)
             console.log(mt);
-            cam_look= [mt[0],mt[1],mt[2]]
+            cam_look=mt
             
         }
             
