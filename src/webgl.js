@@ -1011,12 +1011,14 @@ function draw(){
     gl.uniform3fv(light_position_3_ptr,luz_t_left)
 
     luz_t = createTransformation(4)
-    luz_t= composeRotation(luz_t,rotation_right_light++,'z')
+    luz_t= composeRotation(luz_t,rotation_right_light--,'z')
 
     var luz_t_right = math.multiply(luz_t,math.transpose(math.concat(right_light_front,[1])))
     luz_t_right = luz_t_right._data.slice(0,3)
     var light_position_4_ptr =gl.getUniformLocation(prog,"light_position_4")
     gl.uniform3fv(light_position_4_ptr,luz_t_right)
+    //----------------------------------------------------------------------------
+
 
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
