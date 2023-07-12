@@ -19,7 +19,8 @@ var deslocamentoZ=0
 var rotacaoH =0
 var rotacaoV =0
 
-var fator_deslocamento =1
+var fator_deslocamento =0.1
+var fator_visao =1
 
 var rotation_left_Light=0
 var rotation_right_light=0
@@ -1131,32 +1132,35 @@ document.addEventListener("keydown",(event)=>{
         
 
         if (botton== "w"){
+            cam_position[2]-= fator_deslocamento
+            up =[cam_position[0],cam_position[1],cam_position[2]]
+            up[1] =up[1]+1
+            console.log(cam_position);
+            console.log(up);
             
-            if ( rotacaoH>= 0 && rotacaoH<90   ){
-                deslocamentoX-=fator_deslocamento
-            }
         }
 
         if (botton== "s"){
-            cam_position[2]=cam_position[2]+0.1
-            cam_look[2]= cam_look[2]+0.1
-            console.log(cam_position)
-            console.log(cam_look)
+            cam_position[2]+= fator_deslocamento
+            up =cam_position
+            up[1] =cam_position[1]+1
+
         }
 
         if (botton== "d"){
-            cam_position[0]=cam_position[0]+0.1
-            cam_look[0]=cam_look[0]+0.1
-            console.log(cam_position)
-            console.log(cam_look)
+            cam_position[0]+= fator_deslocamento
+            up =cam_position
+            up[1] =cam_position[1]+1
+
+
             
         }
 
         if (botton== "a"){
-            cam_position[0]=cam_position[0]-0.1
-            cam_look[0]=cam_look[0]-0.1
-            console.log(cam_position)
-            console.log(cam_look)
+            cam_position[0]-= fator_deslocamento
+            up =cam_position
+            up[1] =cam_position[1]+1
+
             
         }
 
