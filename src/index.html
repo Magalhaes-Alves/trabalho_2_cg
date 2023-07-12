@@ -159,11 +159,11 @@
         //Luz pontual
         gl_FragColor.rgb += .8*light_color*light_pontual_1* color_tex;
         gl_FragColor.rgb += .8*light_color*light_pontual_2* color_tex;
-        gl_FragColor.rgb += .8*light_color*light_pontual_3* color_tex;
-        gl_FragColor.rgb += .8*light_color*light_pontual_4* color_tex;
+        gl_FragColor.rgb += .5*light_color*light_pontual_3* color_tex;
+        gl_FragColor.rgb += .5*light_color*light_pontual_4* color_tex;
 
 
-        gl_FragColor.rgb += .0*light_color*pow(light_especular,1000.0)*color_tex;
+        gl_FragColor.rgb += .1*light_color*pow(light_especular,1000.0)*color_tex;
         gl_FragColor.a =1.0;
     }
 

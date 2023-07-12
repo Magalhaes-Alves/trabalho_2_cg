@@ -19,7 +19,7 @@ var deslocamentoZ=0
 var rotacaoH =0
 var rotacaoV =0
 
-var fator_deslocamento =0.3
+var fator_deslocamento =1
 
 var rotation_left_Light=0
 var rotation_right_light=0
@@ -1128,7 +1128,7 @@ document.addEventListener("keydown",(event)=>{
         
         botton = event.key
 
-        var matrix_t = createTransformation(4)
+        
 
         if (botton== "w"){
             
@@ -1161,24 +1161,51 @@ document.addEventListener("keydown",(event)=>{
         }
 
         if (botton=="ArrowUp"){
-            rotacaoV+=1
-            mt = composeRotation(matrix_t,rotacaoV,'x')
-            var mf= math.multiply([cam_look[0],cam_look[1],cam_look[2],1],mt)
-            
+
+            var rotacionar_centro = createTransformation(4)
+            var [tx,ty,tz] =cam_position
+            rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
+            rotacionar_centro = composeRotation(rotacionar_centro,fator_deslocamento,'x')
+            var cam_look_1 = math.concat(cam_look,[1])
+            cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
+            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
+            cam_look = cam_look_1._data.slice(0,3)
             
         }
 
-        if (botton=="ArrowRight"){
-            rotacaoH=5
-            
-            var mt = composeRotation(matrix_t,rotacaoH,'y')
+        if (botton == "ArrowDown"){
+            var rotacionar_centro = createTransformation(4)
+            var [tx,ty,tz] =cam_position
+            rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
+            rotacionar_centro = composeRotation(rotacionar_centro,-fator_deslocamento,'x')
             var cam_look_1 = math.concat(cam_look,[1])
-            mt = math.multiply(mt,math.transpose(cam_look_1))
-            mt = mt._data.slice(0,3)
-            console.log(mt);
-            cam_look=mt
+            cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
+            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
+            cam_look = cam_look_1._data.slice(0,3)
+        }
+
+        if (botton=="ArrowRight"){
+            var rotacionar_centro = createTransformation(4)
+            var [tx,ty,tz] =cam_position
+            rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
+            rotacionar_centro = composeRotation(rotacionar_centro,fator_deslocamento,'y')
+            var cam_look_1 = math.concat(cam_look,[1])
+            cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
+            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
+            cam_look = cam_look_1._data.slice(0,3)
             
         }
-            
+
+        if (botton=="ArrowLeft"){
+            var rotacionar_centro = createTransformation(4)
+            var [tx,ty,tz] =cam_position
+            rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
+            rotacionar_centro = composeRotation(rotacionar_centro,-fator_deslocamento,'y')
+            var cam_look_1 = math.concat(cam_look,[1])
+            cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
+            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
+            cam_look = cam_look_1._data.slice(0,3)
+
+        }
 
     })
