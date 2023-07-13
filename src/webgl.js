@@ -2,24 +2,19 @@
 var teximg =[]
 var texSrc =["img/madeira_resize.jpg","img/chrono_trigger.jpg",
             "img/ffvii.jpg","img/dark souls.jpeg","img/hollow_knight.jpeg",
-            "img/mgsv.jpg","img/ocarina_time.jpg",]
+            "img/mgsv.jpg","img/ocarina_time.jpg","img/CG.png"]
 var loadTex =0
 var gl
 var prog
 var angle=0
 
-var cam_position=[0, 0.,5]
-var cam_look =[0.1,0.1,0.1]
+var cam_position= [0, 0.,5]
+var cam_look = [0.1,0.1,0.1]
 var up =  [cam_position[0],cam_position[1]+1,cam_position[2]]
 
-var deslocamentoX=0
-var deslocamentoY=0
-var deslocamentoZ=0
 
-var rotacaoH =0
-var rotacaoV =0
-
-var fator_deslocamento =0.1
+var fator_deslocamento_cam_position =0.1
+var fator_rotacao_cam_look = 1
 var fator_visao =1
 
 var rotation_left_Light=0
@@ -118,6 +113,13 @@ function init(){
     teximg[6]= new Image()
     teximg[6].src = texSrc[6]
     teximg[6].onload= function(){
+        loadTex++
+        loadTextures()
+    }
+
+    teximg[7]= new Image()
+    teximg[7].src = texSrc[7]
+    teximg[7].onload= function(){
         loadTex++
         loadTextures()
     }
@@ -727,11 +729,11 @@ function configScene(){
 
                                     // Normal Parede Direita
 
-                                        1, 0, 0,
-                                        1, 0, 0,
-                                        1, 0, 0,
-                                        1, 0, 0,
-                                        1, 0, 0,
+                                        -1, 0, 0,
+                                        -1, 0, 0,
+                                        -1, 0, 0,
+                                        -1, 0, 0,
+                                        -1, 0, 0,
 
                                     //Normal Chão frente
 
@@ -824,8 +826,22 @@ function configScene(){
                             )
     //Adiciona direção a luz
     //Primeira luz direcional
+
+    var cubo_animado_arestas= new Float32Array([
+                                            //   x     y      z   xt yt  normals
+                                                0.25, 0.25,  0.5,  0, 0, 0,0,-1,
+                                                0.25,    0,  0.5,  0, 1, 0,0,-1,
+                                                0.0,    0,  0.5,   1, 1, 0,0,-1,
+                                                0.0, 0.25,  0.5,   1, 0, 0,0,-1,
+                                                0.25, 0.25,  0.5,  0, 0, 0,0,-1,
+
+                                                ])
+
+    
+
+
     var lightPtr_1 =gl.getUniformLocation(prog,"light_direction_1")
-    gl.uniform3fv(lightPtr_1,[-5,-10,-11])
+    gl.uniform3fv(lightPtr_1,[-1,-1,-0.5])
 
     //Segunda luz direcional
     var lightPtr_2 =gl.getUniformLocation(prog,"light_direction_2")
@@ -837,10 +853,10 @@ function configScene(){
 
     //Posição luz
     var light_position_1_ptr =gl.getUniformLocation(prog,"light_position_1")
-    gl.uniform3fv(light_position_1_ptr,[-0.57,0.50,-0.5])
+    gl.uniform3fv(light_position_1_ptr,[1,0.50,-0.5])
 
     var light_position_2_ptr =gl.getUniformLocation(prog,"light_position_2")
-    gl.uniform3fv(light_position_2_ptr,[-1.3,0.5,-1.2])
+    gl.uniform3fv(light_position_2_ptr,[-1.3,0.5,-3])
 
     var light_position_3_ptr =gl.getUniformLocation(prog,"light_position_3")
     gl.uniform3fv(light_position_3_ptr,[-0.40,0.1,0.1])
@@ -1020,7 +1036,6 @@ function draw(){
     gl.uniform3fv(light_position_4_ptr,luz_t_right)
     //----------------------------------------------------------------------------
 
-
     //Limpa a tela e o buffer de profundidade
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     //Cria um ponteiro para a variável que indica qual o slot onde a textura está
@@ -1112,12 +1127,6 @@ function draw(){
     gl.drawArrays(gl.TRIANGLES,75,3)
     gl.drawArrays(gl.TRIANGLES,77,3)
 
-
-
-    
-
-    //Desenha placa
- 
     
     requestAnimationFrame(draw)
 
@@ -1132,36 +1141,51 @@ document.addEventListener("keydown",(event)=>{
         
 
         if (botton== "w"){
-            cam_position[2]-= fator_deslocamento
-            up =[cam_position[0],cam_position[1],cam_position[2]]
+            cam_position[2]-= fator_deslocamento_cam_position
+            up =[...cam_position]
             up[1] =up[1]+1
+            cam_look[2] -=fator_deslocamento_cam_position
             console.log(cam_position);
             console.log(up);
             
         }
 
         if (botton== "s"){
-            cam_position[2]+= fator_deslocamento
-            up =cam_position
-            up[1] =cam_position[1]+1
+            cam_position[2]+= fator_deslocamento_cam_position
+            up =[...cam_position]
+            up[1] =up[1]+1
+            cam_look[2] +=fator_deslocamento_cam_position
 
         }
 
         if (botton== "d"){
-            cam_position[0]+= fator_deslocamento
-            up =cam_position
-            up[1] =cam_position[1]+1
-
-
-            
+            cam_position[0]+= fator_deslocamento_cam_position
+            up =[...cam_position]
+            up[1] =up[1]+1       
+            cam_look[0]+=fator_deslocamento_cam_position     
         }
 
         if (botton== "a"){
-            cam_position[0]-= fator_deslocamento
-            up =cam_position
-            up[1] =cam_position[1]+1
+            cam_position[0]-= fator_deslocamento_cam_position
+            up =[...cam_position]
+            up[1] =up[1]+1
+            cam_look[0]-=fator_deslocamento_cam_position
+        }
 
-            
+        if (botton== "t"){
+            cam_position[1]+= fator_deslocamento_cam_position
+            up =[...cam_position]
+            up[1] =up[1]+1
+            cam_look[1]+=fator_deslocamento_cam_position
+            cam_look[2]+=fator_deslocamento_cam_position
+        }
+
+        if (botton== "g"){
+            cam_position[1]-= fator_deslocamento_cam_position
+            up =[...cam_position]
+            up[1] =up[1]+1
+            cam_look[1]-=fator_deslocamento_cam_position
+            cam_look[2]-=fator_deslocamento_cam_position
         }
 
         if (botton=="ArrowUp"){
@@ -1169,7 +1193,7 @@ document.addEventListener("keydown",(event)=>{
             var rotacionar_centro = createTransformation(4)
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
-            rotacionar_centro = composeRotation(rotacionar_centro,fator_deslocamento,'x')
+            rotacionar_centro = composeRotation(rotacionar_centro,fator_rotacao_cam_look,'x')
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
             cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
@@ -1181,7 +1205,7 @@ document.addEventListener("keydown",(event)=>{
             var rotacionar_centro = createTransformation(4)
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
-            rotacionar_centro = composeRotation(rotacionar_centro,-fator_deslocamento,'x')
+            rotacionar_centro = composeRotation(rotacionar_centro,-fator_rotacao_cam_look,'x')
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
             cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
@@ -1192,7 +1216,7 @@ document.addEventListener("keydown",(event)=>{
             var rotacionar_centro = createTransformation(4)
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
-            rotacionar_centro = composeRotation(rotacionar_centro,fator_deslocamento,'y')
+            rotacionar_centro = composeRotation(rotacionar_centro,fator_rotacao_cam_look,'y')
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
             cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
@@ -1204,12 +1228,15 @@ document.addEventListener("keydown",(event)=>{
             var rotacionar_centro = createTransformation(4)
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
-            rotacionar_centro = composeRotation(rotacionar_centro,-fator_deslocamento,'y')
+            rotacionar_centro = composeRotation(rotacionar_centro,-fator_rotacao_cam_look,'y')
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
             cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
             cam_look = cam_look_1._data.slice(0,3)
 
         }
+
+        console.log(cam_position);
+        console.log(cam_look)
 
     })

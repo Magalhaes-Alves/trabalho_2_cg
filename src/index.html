@@ -28,6 +28,7 @@
     //Matrizes de transformação
     uniform mat4 transf_projecao;
     uniform mat4 transf;
+    uniform mat4 animacao;
 
     //Variavel para inserir cor no frag shader
     varying vec4 color;
@@ -111,7 +112,10 @@
 
         vec3 pToCam = normalize(pointToCam);
         
-        vec3 halfVec = normalize(pToCam+pToLight_1);
+        vec3 halfVec_1 = normalize(pToCam+pToLight_1);
+        vec3 halfVec_2 = normalize(pToCam+pToLight_2);
+        vec3 halfVec_3 = normalize(pToCam+pToLight_3);
+        vec3 halfVec_4 = normalize(pToCam+pToLight_4);
 
         vec3 v_normal_n = normalize(v_normal);
 
@@ -128,7 +132,10 @@
         float light_pontual_3 =dot(v_normal_n,pToLight_3);
         float light_pontual_4 =dot(v_normal_n,pToLight_4);
 
-        float light_especular = dot(v_normal_n, halfVec);
+        float light_especular_1 = dot(v_normal_n, halfVec_1);
+        float light_especular_2 = dot(v_normal_n, halfVec_2);
+        float light_especular_3 = dot(v_normal_n, halfVec_3);
+        float light_especular_4 = dot(v_normal_n, halfVec_4);
 
         vec3 color_tex;
 
@@ -141,7 +148,11 @@
         if (light_pontual_3<0.0) light_pontual_3=0.0;
         if (light_pontual_4<0.0) light_pontual_4=0.0;
 
-        if (light_especular<0.0) light_especular = 0.0;
+        if (light_especular_1<0.0) light_especular_1 = 0.0;
+        if (light_especular_2<0.0) light_especular_2 = 0.0;
+        if (light_especular_3<0.0) light_especular_3 = 0.0;
+        if (light_especular_4<0.0) light_especular_4 = 0.0;
+        
 
         if (is_color ==1){
             color_tex = color.rgb;
@@ -153,17 +164,20 @@
         gl_FragColor.rgb =  .09*light_color*color_tex;
 
         // Luz direcional
-        gl_FragColor.rgb += .3*light_color*light_directional_1*color_tex;
-        gl_FragColor.rgb += .3*light_color*light_directional_2*color_tex;
+        gl_FragColor.rgb += .1*light_color*light_directional_1*color_tex;
+        gl_FragColor.rgb += .5*light_color*light_directional_2*color_tex;
 
         //Luz pontual
-        gl_FragColor.rgb += .8*light_color*light_pontual_1* color_tex;
+        gl_FragColor.rgb += .4*light_color*light_pontual_1* color_tex;
         gl_FragColor.rgb += .8*light_color*light_pontual_2* color_tex;
-        gl_FragColor.rgb += .5*light_color*light_pontual_3* color_tex;
-        gl_FragColor.rgb += .5*light_color*light_pontual_4* color_tex;
+        gl_FragColor.rgb += .3*light_color*light_pontual_3* color_tex;
+        gl_FragColor.rgb += .3*light_color*light_pontual_4* color_tex;
 
 
-        gl_FragColor.rgb += .1*light_color*pow(light_especular,1000.0)*color_tex;
+        gl_FragColor.rgb += .1*light_color*pow(light_especular_1,15.0)*color_tex;
+        gl_FragColor.rgb += .1*light_color*pow(light_especular_2,15.0)*color_tex;
+        gl_FragColor.rgb += .1*light_color*pow(light_especular_3,15.0)*color_tex;
+        gl_FragColor.rgb += .1*light_color*pow(light_especular_4,15.0)*color_tex;
         gl_FragColor.a =1.0;
     }
 
