@@ -2,7 +2,7 @@
 var teximg =[]
 var texSrc =["img/madeira_resize.jpg","img/chrono_trigger.jpg",
             "img/ffvii.jpg","img/dark souls.jpeg","img/hollow_knight.jpeg",
-            "img/mgsv.jpg","img/ocarina_time.jpg","img/CG.png"]
+            "img/mgsv.jpg","img/ocarina_time.jpg","img/CG.png",'img/titulo.png']
 var loadTex =0
 var gl
 var prog
@@ -124,6 +124,12 @@ function init(){
         loadTextures()
     }
 
+    teximg[8]= new Image()
+    teximg[8].src = texSrc[8]
+    teximg[8].onload= function(){
+        loadTex++
+        loadTextures()
+    }
         
 function loadTextures(){
     if (loadTex == teximg.length){
@@ -290,14 +296,22 @@ function configScene(){
                                              0.60, 0.25, -1.99,
                                              0.60,  0.8, -1.99,
                                             -0.20,  0.8, -1.99,
-                                            
+
+
+                                        //Face Cubo animado
+                                            -0.125, 0.90,  0.125,
+                                            -0.125, 0.65,  0.125,
+                                             0.125, 0.65,  0.125,
+                                             0.125,  0.90, 0.125,
+                                            -0.125, 0.90,  0.125,
+                                                
                                         //Placa de Titulo -- Textura
 
-                                            /* -0.40, 0.68, 0.01, 1.0, 1.0, 1.0,
-                                            -0.40, 0.50, 0.01, 1.0, 1.0, 1.0,
-                                             0.40, 0.50, 0.01, 1.0, 1.0, 1.0,
-                                             0.40, 0.68, 0.01, 1.0, 1.0, 1.0,
-                                            -0.40, 0.68, 0.01, 1.0, 1.0, 1.0 */
+                                            -0.70, 0.65, 0.01,
+                                            -0.70, 0.50, 0.01, 
+                                             0.70, 0.50, 0.01, 
+                                             0.70, 0.65, 0.01, 
+                                            -0.70, 0.65, 0.01,  
 
                                             ]);
     //Cria buffer na GPU e copia coordenadas para ele
@@ -435,7 +449,21 @@ function configScene(){
                                             0,0,0,
                                             0,0,0,
                                             0,0,0,
-                                                
+
+                                        // Cubo animado
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+                                        
+                                        //Placa 
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+                                            1,1,1,
+
                                             
     ])
 
@@ -577,7 +605,21 @@ function configScene(){
                                                 1,0,
                                                 0,0,
 
+                                            // Cubo animado
 
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
+
+                                            //Placa
+
+                                                0,0,
+                                                0,1,
+                                                1,1,
+                                                1,0,
+                                                0,0,
                                             ])
     
     var buftexture = gl.createBuffer()
@@ -678,6 +720,28 @@ function configScene(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
 
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[6])
+
+    var tex7 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE7)
+    gl.bindTexture(gl.TEXTURE_2D,tex7)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[7])
+
+    var tex8 = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE8)
+    gl.bindTexture(gl.TEXTURE_2D,tex8)
+
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
+
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,teximg[8])
 
 
     var normals = new Float32Array([
@@ -805,6 +869,21 @@ function configScene(){
                                         0, 0, 1,
                                         0, 0, 1,
                                         0, 0, 1,
+
+                                    //Cubo animado
+
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+
+                                    // Placa 
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
+                                        0, 0, 1,
                                     ]);
     //Cria buffer na GPU e copia coordenadas para ele
     var bufnormalsPtr = gl.createBuffer();
@@ -827,17 +906,6 @@ function configScene(){
     //Adiciona direção a luz
     //Primeira luz direcional
 
-    var cubo_animado_arestas= new Float32Array([
-                                            //   x     y      z   xt yt  normals
-                                                0.25, 0.25,  0.5,  0, 0, 0,0,-1,
-                                                0.25,    0,  0.5,  0, 1, 0,0,-1,
-                                                0.0,    0,  0.5,   1, 1, 0,0,-1,
-                                                0.0, 0.25,  0.5,   1, 0, 0,0,-1,
-                                                0.25, 0.25,  0.5,  0, 0, 0,0,-1,
-
-                                                ])
-
-    
 
 
     var lightPtr_1 =gl.getUniformLocation(prog,"light_direction_1")
@@ -991,7 +1059,6 @@ function draw(){
     
 
     var transf = createTransformation(4)
-    transf= composeScale(transf,1,1,1)
     
     var transf_proj = math.multiply(cam,transf)
     transf_proj = math.multiply(mproj,transf_proj)
@@ -1123,11 +1190,37 @@ function draw(){
 
     //Desenha quadro 6
     gl.uniform1i(texPtr,6)
-
+    
     gl.drawArrays(gl.TRIANGLES,75,3)
     gl.drawArrays(gl.TRIANGLES,77,3)
-
     
+    //Animação
+    transf  = createTransformation(4)
+    transf = composeTranslation(transf,0,0,-0.125)
+    transf = composeRotation(transf,angle,'y')
+    transf = composeTranslation(transf,0,0,0.125)
+    
+    angle++
+    
+    transf = math.flatten(math.transpose(transf))._data
+    transfPtr = gl.getUniformLocation(prog,"transf")
+    gl.uniformMatrix4fv(transfPtr,false,transf)
+    
+    gl.uniform1i(texPtr,7)
+
+    gl.drawArrays(gl.TRIANGLES,80,3)
+    gl.drawArrays(gl.TRIANGLES,82,3)
+
+
+    transf = createTransformation(4)
+    transf = math.flatten(math.transpose(transf))._data
+    transfPtr = gl.getUniformLocation(prog,"transf")
+    gl.uniformMatrix4fv(transfPtr,false,transf)
+    //Animação
+    gl.uniform1i(texPtr,8)
+    gl.drawArrays(gl.TRIANGLES,85,3)
+    gl.drawArrays(gl.TRIANGLES,87,3)
+
     requestAnimationFrame(draw)
 
 
@@ -1235,7 +1328,8 @@ document.addEventListener("keydown",(event)=>{
             cam_look = cam_look_1._data.slice(0,3)
 
         }
-
+        var cam_position_ptr =gl.getUniformLocation(prog,"cam_pos")
+        gl.uniform3fv(cam_position_ptr,cam_position)
         console.log(cam_position);
         console.log(cam_look)
 

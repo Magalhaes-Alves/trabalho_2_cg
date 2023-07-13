@@ -28,7 +28,6 @@
     //Matrizes de transformação
     uniform mat4 transf_projecao;
     uniform mat4 transf;
-    uniform mat4 animacao;
 
     //Variavel para inserir cor no frag shader
     varying vec4 color;
@@ -59,7 +58,7 @@
 
         v_textCoord = texCoord;
 
-        gl_Position = transf_projecao*position;
+        gl_Position = transf_projecao*transf*position;
 
         v_normal = (transf*vec4(normal,1.0)).xyz;
 
