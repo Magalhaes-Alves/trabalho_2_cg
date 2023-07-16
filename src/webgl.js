@@ -106,14 +106,12 @@ function initGl()
         //Avisa ao webgl que deve usar o seguinte programa
         gl.useProgram(prog);
 
-        //Inicializa Ã¡rea de desenho: viewport e cor de limpeza; modo de mistura de cor;limpa a tela
+        //Inicializa área de desenho: viewport e cor de limpeza; modo de mistura de cor;limpa a tela
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clearColor(0, 0, 0, 1);
         gl.enable( gl.BLEND );
         gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
         gl.enable(gl.DEPTH_TEST)
-        //Não renderize faces que não vemos
-        //gl.enable(gl.CULL_FACE)
 
     }
 }
@@ -121,7 +119,7 @@ function initGl()
 function configScene(){
     //Define coordenadas dos triangulos e suas propriedades (cor ou textura)
     var coordTriangles = new Float32Array([
-                                        //Parede Frente - 0
+                                        //Parede Frente
                                         //    x     y    z   
                                             -0.75,  0.90, 0.0,  
                                             -0.75,   0.0, 0.0, 
@@ -129,7 +127,7 @@ function configScene(){
                                              0.75,  0.90, 0.0, 
                                             -0.75,  0.90, 0.0, 
                                         
-                                        //Porta - 5
+                                        //Porta 
                                             -0.25,  0.45, 0.01, 
                                             -0.25,   0.0, 0.01, 
                                              0.25,   0.0, 0.01, 
@@ -182,7 +180,7 @@ function configScene(){
                                            -0.75, 0,  0,
                                             0.75, 0,  0,
 
-                                        //Chão tras
+                                        //Chão trás
 
                                            -0.75, 0, -1,
                                            -0.75, 0, -2,
@@ -229,14 +227,14 @@ function configScene(){
                                             -1.80,  0.8, -1.99,
 
 
-                                        //Quadro parede Fundo 5
+                                        //Quadro parede Fundo 5 - MGSV
                                             -1.0,  0.8, -1.99,
                                             -1.0, 0.25, -1.99,
                                             -0.40, 0.25, -1.99,
                                             -0.40,  0.8, -1.99,
                                             -1.0,  0.8, -1.99,
 
-                                        //Quadro parede Fundo 6
+                                        //Quadro parede Fundo 6 - Zelda
                                             -0.20,  0.8, -1.99,
                                             -0.20, 0.25, -1.99,
                                              0.60, 0.25, -1.99,
@@ -244,14 +242,14 @@ function configScene(){
                                             -0.20,  0.8, -1.99,
 
 
-                                        //Face Cubo animado
+                                        //Face Placa Giratória
                                             -0.125, 0.90,  0.125,
                                             -0.125, 0.65,  0.125,
                                              0.125, 0.65,  0.125,
                                              0.125,  0.90, 0.125,
                                             -0.125, 0.90,  0.125,
                                                 
-                                        //Placa de Titulo -- Textura
+                                        //Placa de Titulo 
 
                                             -0.70, 0.65, 0.01,
                                             -0.70, 0.50, 0.01, 
@@ -1003,7 +1001,7 @@ function draw(){
     /* var cam = createCamera([5,5,5],[0,0,0],[5,6,5]) */
     var cam = createCamera(cam_position,cam_look,up)
     
-
+    //Seta a matriz de transformção para ser a identidade
     var transf = createTransformation(4)
     
     var transf_proj = math.multiply(cam,transf)
@@ -1177,22 +1175,19 @@ document.addEventListener("keydown",(event)=>{
         
         botton = event.key
 
-        
-
         if (botton== "w"){
             cam_position[2]-= fator_deslocamento_cam_position
             up =[...cam_position]
-            up[1] =up[1]+1
+            up[1]++
             cam_look[2] -=fator_deslocamento_cam_position
-            console.log(cam_position);
-            console.log(up);
+
             
         }
 
         if (botton== "s"){
             cam_position[2]+= fator_deslocamento_cam_position
             up =[...cam_position]
-            up[1] =up[1]+1
+            up[1]++
             cam_look[2] +=fator_deslocamento_cam_position
 
         }
@@ -1200,21 +1195,21 @@ document.addEventListener("keydown",(event)=>{
         if (botton== "d"){
             cam_position[0]+= fator_deslocamento_cam_position
             up =[...cam_position]
-            up[1] =up[1]+1       
+            up[1]++       
             cam_look[0]+=fator_deslocamento_cam_position     
         }
 
         if (botton== "a"){
             cam_position[0]-= fator_deslocamento_cam_position
             up =[...cam_position]
-            up[1] =up[1]+1
+            up[1]++
             cam_look[0]-=fator_deslocamento_cam_position
         }
 
         if (botton== "t"){
             cam_position[1]+= fator_deslocamento_cam_position
             up =[...cam_position]
-            up[1] =up[1]+1
+            up[1]++
             cam_look[1]+=fator_deslocamento_cam_position
             cam_look[2]+=fator_deslocamento_cam_position
         }
@@ -1233,9 +1228,9 @@ document.addEventListener("keydown",(event)=>{
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
             rotacionar_centro = composeRotation(rotacionar_centro,fator_rotacao_cam_look,'x')
+            rotacionar_centro = composeTranslation(rotacionar_centro,tx,ty,tz)
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
-            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
             cam_look = cam_look_1._data.slice(0,3)
             
         }
@@ -1245,9 +1240,10 @@ document.addEventListener("keydown",(event)=>{
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
             rotacionar_centro = composeRotation(rotacionar_centro,-fator_rotacao_cam_look,'x')
+            rotacionar_centro = composeTranslation(rotacionar_centro,tx,ty,tz)
+
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
-            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
             cam_look = cam_look_1._data.slice(0,3)
         }
 
@@ -1256,9 +1252,10 @@ document.addEventListener("keydown",(event)=>{
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
             rotacionar_centro = composeRotation(rotacionar_centro,fator_rotacao_cam_look,'y')
+            rotacionar_centro = composeTranslation(rotacionar_centro,tx,ty,tz)
+
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
-            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
             cam_look = cam_look_1._data.slice(0,3)
             
         }
@@ -1268,15 +1265,15 @@ document.addEventListener("keydown",(event)=>{
             var [tx,ty,tz] =cam_position
             rotacionar_centro = composeTranslation(rotacionar_centro,-tx,-ty,-tz)
             rotacionar_centro = composeRotation(rotacionar_centro,-fator_rotacao_cam_look,'y')
+            rotacionar_centro = composeTranslation(rotacionar_centro,tx,ty,tz)
+
             var cam_look_1 = math.concat(cam_look,[1])
             cam_look_1 = math.multiply(rotacionar_centro,math.transpose(cam_look_1))
-            cam_look_1 = math.multiply(composeTranslation(createTransformation(4),tx,ty,tz),math.transpose(cam_look_1))
             cam_look = cam_look_1._data.slice(0,3)
 
         }
         var cam_position_ptr =gl.getUniformLocation(prog,"cam_pos")
         gl.uniform3fv(cam_position_ptr,cam_position)
-        console.log(cam_position);
-        console.log(cam_look)
+
 
     })
