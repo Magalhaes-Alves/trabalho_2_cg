@@ -66,69 +66,15 @@ function createProgram(gl, vtxShader, fragShader)
 
 function init(){
     //Garante que as texturas serão carregadas totalmente antes de iniciar o programa
-    teximg[0] = new Image()
-    teximg[0].src = texSrc[0]
-    teximg[0].onload= ()=>{
+
+    for (i=0;i<texSrc.length;i++){
+        teximg[i] = new Image()
+        teximg[i].src = texSrc[i]
+        teximg[i].onload= ()=>{
         
-        loadTex++
-        loadTextures()
-    }
-    
-
-    teximg[1]= new Image()
-    teximg[1].src = texSrc[1]
-    teximg[1].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[2]= new Image()
-    teximg[2].src = texSrc[2]
-    teximg[2].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[3]= new Image()
-    teximg[3].src = texSrc[3]
-    teximg[3].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[4]= new Image()
-    teximg[4].src = texSrc[4]
-    teximg[4].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[5]= new Image()
-    teximg[5].src = texSrc[5]
-    teximg[5].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[6]= new Image()
-    teximg[6].src = texSrc[6]
-    teximg[6].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[7]= new Image()
-    teximg[7].src = texSrc[7]
-    teximg[7].onload= function(){
-        loadTex++
-        loadTextures()
-    }
-
-    teximg[8]= new Image()
-    teximg[8].src = texSrc[8]
-    teximg[8].onload= function(){
-        loadTex++
-        loadTextures()
+            loadTex++
+            loadTextures()
+        }
     }
         
 function loadTextures(){
