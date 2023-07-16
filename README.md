@@ -1,4 +1,4 @@
-# Trabalho 2 CG 2023.1
+# Trabalho 2 - CG 2023.1
 
 ## Antonio Gabriel Magalhães Alves - 496218
 ## Linguagem:
