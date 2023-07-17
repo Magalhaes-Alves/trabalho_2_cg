@@ -41,8 +41,7 @@
     - Visão em primeira pessoa implementada.
 - **Deve ser possível controlar a câmera (isto é, passear pelo ambiente) utilizando as setas do teclado (opcionalmente, mouse também). Não há a necessidade de implementar detecção de colisão**
     - Controles de câmera implementados.
-    - Colisão não foi implementada.
 
 - **O cenário deve ser construído “na mão”, isto é, não é permitido utilizar objeto modelado em um software externo (por exemplo, Blender) e carregá-lo no seu programa**
-    - As coordenadas de todos os poligonos no cenário foram definidas manualmente.
+    - As coordenadas de todos os poligonos no cenário foram definidas manualmente no arquivo webgl.js.
 
